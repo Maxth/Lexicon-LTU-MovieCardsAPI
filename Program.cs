@@ -16,9 +16,16 @@ builder.Services.AddDbContext<MovieCardsDbContext>(options =>
     );
 });
 
-builder.Services.AddControllers();
+builder
+    .Services.AddControllers(options =>
+    {
+        //This server only supports JSON and XML so we return a 406 Not Acceptable for requests
+        //demanding other formats
+        options.ReturnHttpNotAcceptable = true;
+    })
+    //Add XML output support
+    .AddXmlDataContractSerializerFormatters();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

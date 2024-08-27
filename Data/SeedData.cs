@@ -1,6 +1,6 @@
 using Bogus;
 using Microsoft.EntityFrameworkCore;
-using MovieCardsApi.Models;
+using MovieCardsApi.Entities;
 
 namespace MovieCardsApi.Data
 {

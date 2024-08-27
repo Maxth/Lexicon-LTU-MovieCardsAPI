@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using MovieCardsApi.Models;
+using MovieCardsApi.Entities;
 
 namespace MovieCardsApi.Data
 {
@@ -9,5 +9,6 @@ namespace MovieCardsApi.Data
             : base(options) { }
 
         public DbSet<Director> Director => Set<Director>();
+        public DbSet<Movie> Movie => Set<Movie>();
     }
 }

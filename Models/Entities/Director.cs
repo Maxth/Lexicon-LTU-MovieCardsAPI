@@ -1,4 +1,4 @@
-namespace MovieCardsApi.Models
+namespace MovieCardsApi.Entities
 {
 #nullable disable
     public class Director
