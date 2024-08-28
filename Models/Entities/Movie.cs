@@ -15,10 +15,10 @@ namespace MovieCardsApi.Entities
         public DateOnly ReleaseDate { get; set; }
 
         [MaxLength(200)]
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         [MaxLength(3)]
-        public string? Rating { get; set; }
+        public string Rating { get; set; }
 
         //Foreign key
         public int DirectorId { get; set; }

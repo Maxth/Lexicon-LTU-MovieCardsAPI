@@ -2,19 +2,9 @@ using dotenv.net;
 using Microsoft.EntityFrameworkCore;
 using MovieCardsApi.Data;
 using MovieCardsAPI.Extensions;
+using MovieCardsAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddDbContext<MovieCardsDbContext>(options =>
-{
-    DotEnv.Load();
-    options.UseNpgsql(
-        Environment.GetEnvironmentVariable("DATABASE_URL")
-            ?? throw new InvalidOperationException("Connection string resolved to null!")
-    );
-});
 
 builder
     .Services.AddControllers(options =>
@@ -28,6 +18,17 @@ builder
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<MovieCardsDbContext>(options =>
+{
+    DotEnv.Load();
+    string? dbUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+    options.UseNpgsql(dbUrl ?? throw new ArgumentNullException(dbUrl));
+});
+
+builder.Services.AddScoped<IMovieInfoRepository, MovieInfoRepository>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
