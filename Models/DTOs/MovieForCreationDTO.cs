@@ -6,17 +6,24 @@ namespace MovieCardsAPI.DTOs
     public class MovieForCreationDTO : IMovieCreationOrUpdateDto
     {
         [Required]
-        [MaxLength(50)]
-        public string Title { get; set; } = string.Empty;
+        [MaxLength(80)]
+        public string Title { get; set; }
 
         [Required]
         public DateOnly ReleaseDate { get; set; }
 
         [MaxLength(3)]
-        public string Rating { get; set; } = string.Empty;
+        public string? Rating { get; set; }
+
+        [Required]
         public DirectorForCreationDTO Director { get; set; } = new DirectorForCreationDTO();
 
         [MaxLength(200)]
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; }
+
+        public MovieForCreationDTO(string title)
+        {
+            Title = title;
+        }
     }
 }

@@ -35,10 +35,9 @@ namespace MovieCardsApi.Data
                     new DateOnly(1900, 01, 01),
                     new DateOnly(2010, 01, 01)
                 );
-                directors[i] = new Director()
+                directors[i] = new Director($"{fName} {lName}")
                 {
                     DateOfBirth = dob,
-                    Name = $"{fName} {lName}",
                     Movie = generateMovies(
                         faker.Random.ArrayElements(actors, rnd.Next(3, 12)),
                         faker.Random.ArrayElements(genres, rnd.Next(1, 4))
@@ -61,7 +60,7 @@ namespace MovieCardsApi.Data
             {
                 uniqueGenreNames.Add(faker.Music.Genre());
             }
-            return uniqueGenreNames.Select(n => new Genre() { Name = n }).ToArray();
+            return uniqueGenreNames.Select(n => new Genre(n)).ToArray();
         }
 
         private static Movie[] generateMovies(Actor[] actors, Genre[] genres)
@@ -69,9 +68,8 @@ namespace MovieCardsApi.Data
             Movie[] movies = new Movie[rnd.Next(1, 6)];
             for (int i = 0; i < movies.Length; i++)
             {
-                movies[i] = new Movie()
+                movies[i] = new Movie(faker.Company.CatchPhrase())
                 {
-                    Title = faker.Company.CatchPhrase(),
                     ReleaseDate = faker.Date.BetweenDateOnly(
                         new DateOnly(1900, 01, 01),
                         new DateOnly(2024, 01, 01)
@@ -92,9 +90,8 @@ namespace MovieCardsApi.Data
 
             for (int i = 0; i < actors.Length; i++)
             {
-                actors[i] = new Actor()
+                actors[i] = new Actor(faker.Name.FullName())
                 {
-                    Name = faker.Name.FullName(),
                     DateOfBirth = faker.Date.BetweenDateOnly(
                         new DateOnly(1900, 01, 01),
                         new DateOnly(2015, 01, 01)

@@ -112,9 +112,8 @@ namespace MovieCardsAPI.Controllers
 
             if (director == null)
             {
-                director = new Director()
+                director = new Director(movieForCreationDto.Director.Name)
                 {
-                    Name = movieForCreationDto.Director.Name,
                     DateOfBirth = movieForCreationDto.Director.DateOfBirth
                 };
 
@@ -122,9 +121,8 @@ namespace MovieCardsAPI.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            var movie = new Movie()
+            var movie = new Movie(movieForCreationDto.Title)
             {
-                Title = movieForCreationDto.Title,
                 ReleaseDate = movieForCreationDto.ReleaseDate,
                 Description = movieForCreationDto.Description,
                 Rating = movieForCreationDto.Rating,
@@ -164,12 +162,11 @@ namespace MovieCardsAPI.Controllers
                 return BadRequest("There is no director with that Id");
             }
 
-            var movie = new Movie()
+            var movie = new Movie(movieForUpdateDTO.Title)
             {
                 Id = Id,
                 ReleaseDate = movieForUpdateDTO.ReleaseDate,
                 Rating = movieForUpdateDTO.Rating,
-                Title = movieForUpdateDTO.Title,
                 Description = movieForUpdateDTO.Description,
                 DirectorId = movieForUpdateDTO.DirectorId,
             };
