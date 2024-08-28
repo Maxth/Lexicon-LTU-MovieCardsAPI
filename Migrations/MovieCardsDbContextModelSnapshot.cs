@@ -52,7 +52,7 @@ namespace MovieCardsAPI.Migrations
                     b.ToTable("GenreMovie");
                 });
 
-            modelBuilder.Entity("MovieCardsApi.Models.Actor", b =>
+            modelBuilder.Entity("MovieCardsApi.Entities.Actor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -71,7 +71,7 @@ namespace MovieCardsAPI.Migrations
                     b.ToTable("Actor");
                 });
 
-            modelBuilder.Entity("MovieCardsApi.Models.ContactInformation", b =>
+            modelBuilder.Entity("MovieCardsApi.Entities.ContactInformation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -96,7 +96,7 @@ namespace MovieCardsAPI.Migrations
                     b.ToTable("ContactInformation");
                 });
 
-            modelBuilder.Entity("MovieCardsApi.Models.Director", b =>
+            modelBuilder.Entity("MovieCardsApi.Entities.Director", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,10 +112,13 @@ namespace MovieCardsAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name", "DateOfBirth")
+                        .IsUnique();
+
                     b.ToTable("Director");
                 });
 
-            modelBuilder.Entity("MovieCardsApi.Models.Genre", b =>
+            modelBuilder.Entity("MovieCardsApi.Entities.Genre", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -131,7 +134,7 @@ namespace MovieCardsAPI.Migrations
                     b.ToTable("Genre");
                 });
 
-            modelBuilder.Entity("MovieCardsApi.Models.Movie", b =>
+            modelBuilder.Entity("MovieCardsApi.Entities.Movie", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -158,18 +161,21 @@ namespace MovieCardsAPI.Migrations
 
                     b.HasIndex("DirectorId");
 
+                    b.HasIndex("Title", "ReleaseDate")
+                        .IsUnique();
+
                     b.ToTable("Movie");
                 });
 
             modelBuilder.Entity("ActorMovie", b =>
                 {
-                    b.HasOne("MovieCardsApi.Models.Actor", null)
+                    b.HasOne("MovieCardsApi.Entities.Actor", null)
                         .WithMany()
                         .HasForeignKey("ActorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MovieCardsApi.Models.Movie", null)
+                    b.HasOne("MovieCardsApi.Entities.Movie", null)
                         .WithMany()
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -178,33 +184,33 @@ namespace MovieCardsAPI.Migrations
 
             modelBuilder.Entity("GenreMovie", b =>
                 {
-                    b.HasOne("MovieCardsApi.Models.Genre", null)
+                    b.HasOne("MovieCardsApi.Entities.Genre", null)
                         .WithMany()
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MovieCardsApi.Models.Movie", null)
+                    b.HasOne("MovieCardsApi.Entities.Movie", null)
                         .WithMany()
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MovieCardsApi.Models.ContactInformation", b =>
+            modelBuilder.Entity("MovieCardsApi.Entities.ContactInformation", b =>
                 {
-                    b.HasOne("MovieCardsApi.Models.Director", "Director")
+                    b.HasOne("MovieCardsApi.Entities.Director", "Director")
                         .WithOne("ContactInformation")
-                        .HasForeignKey("MovieCardsApi.Models.ContactInformation", "DirectorId")
+                        .HasForeignKey("MovieCardsApi.Entities.ContactInformation", "DirectorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Director");
                 });
 
-            modelBuilder.Entity("MovieCardsApi.Models.Movie", b =>
+            modelBuilder.Entity("MovieCardsApi.Entities.Movie", b =>
                 {
-                    b.HasOne("MovieCardsApi.Models.Director", "Director")
+                    b.HasOne("MovieCardsApi.Entities.Director", "Director")
                         .WithMany("Movie")
                         .HasForeignKey("DirectorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -213,7 +219,7 @@ namespace MovieCardsAPI.Migrations
                     b.Navigation("Director");
                 });
 
-            modelBuilder.Entity("MovieCardsApi.Models.Director", b =>
+            modelBuilder.Entity("MovieCardsApi.Entities.Director", b =>
                 {
                     b.Navigation("ContactInformation");
 

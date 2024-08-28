@@ -74,7 +74,7 @@ namespace MovieCardsApi.Data
                     Title = faker.Company.CatchPhrase(),
                     ReleaseDate = faker.Date.BetweenDateOnly(
                         new DateOnly(1900, 01, 01),
-                        new DateOnly(2010, 01, 01)
+                        new DateOnly(2024, 01, 01)
                     ),
                     Rating = faker.Random.Double(0, 5).ToString("0.0"),
                     Description = faker.Lorem.Sentence(8),
@@ -97,7 +97,7 @@ namespace MovieCardsApi.Data
                     Name = faker.Name.FullName(),
                     DateOfBirth = faker.Date.BetweenDateOnly(
                         new DateOnly(1900, 01, 01),
-                        new DateOnly(2010, 01, 01)
+                        new DateOnly(2015, 01, 01)
                     )
                 };
             }

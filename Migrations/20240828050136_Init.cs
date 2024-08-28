@@ -157,6 +157,12 @@ namespace MovieCardsAPI.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Director_Name_DateOfBirth",
+                table: "Director",
+                columns: new[] { "Name", "DateOfBirth" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GenreMovie_MovieId",
                 table: "GenreMovie",
                 column: "MovieId");
@@ -165,6 +171,12 @@ namespace MovieCardsAPI.Migrations
                 name: "IX_Movie_DirectorId",
                 table: "Movie",
                 column: "DirectorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Movie_Title_ReleaseDate",
+                table: "Movie",
+                columns: new[] { "Title", "ReleaseDate" },
+                unique: true);
         }
 
         /// <inheritdoc />

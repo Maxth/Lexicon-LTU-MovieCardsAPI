@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MovieCardsAPI.Configurations;
 using MovieCardsApi.Entities;
 
 namespace MovieCardsApi.Data
@@ -10,5 +11,11 @@ namespace MovieCardsApi.Data
 
         public DbSet<Director> Director => Set<Director>();
         public DbSet<Movie> Movie => Set<Movie>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new DirectorConfigurations());
+            modelBuilder.ApplyConfiguration(new MovieConfigurations());
+        }
     }
 }
