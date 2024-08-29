@@ -1,4 +1,4 @@
 namespace MovieCardsAPI.DTOs
 {
-    public record DirectorDTO(int Id, string Name, string email);
+    public record DirectorDTO(int Id, string Name, DateOnly DateOfBirth);
 }

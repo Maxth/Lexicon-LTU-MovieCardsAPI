@@ -27,10 +27,5 @@ namespace MovieCardsApi.Entities
         public Director Director { get; set; }
         public ICollection<Actor> Actor { get; set; }
         public ICollection<Genre> Genre { get; set; }
-
-        public Movie(string title)
-        {
-            Title = title;
-        }
     }
 }

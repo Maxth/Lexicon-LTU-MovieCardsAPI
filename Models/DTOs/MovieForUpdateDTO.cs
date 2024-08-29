@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using MovieCards.Interfaces;
 
 namespace MovieCardsAPI.DTOs
 {
-    public class MovieForUpdateDTO : IMovieCreationOrUpdateDto
+    public class MovieForUpdateDTO
     {
         [Required]
         [MaxLength(80)]

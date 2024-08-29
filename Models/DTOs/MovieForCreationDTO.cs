@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-using MovieCards.Interfaces;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace MovieCardsAPI.DTOs
 {
-    public class MovieForCreationDTO : IMovieCreationOrUpdateDto
+#nullable disable
+    public class MovieForCreationDTO
     {
         [Required]
         [MaxLength(80)]
@@ -13,17 +14,12 @@ namespace MovieCardsAPI.DTOs
         public DateOnly ReleaseDate { get; set; }
 
         [MaxLength(3)]
-        public string? Rating { get; set; }
+        public string Rating { get; set; }
 
         [Required]
-        public DirectorForCreationDTO Director { get; set; } = new DirectorForCreationDTO();
+        public int? DirectorId { get; set; }
 
         [MaxLength(200)]
-        public string? Description { get; set; }
-
-        public MovieForCreationDTO(string title)
-        {
-            Title = title;
-        }
+        public string Description { get; set; }
     }
 }

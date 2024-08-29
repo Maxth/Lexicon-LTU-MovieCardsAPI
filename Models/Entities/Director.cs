@@ -15,10 +15,5 @@ namespace MovieCardsApi.Entities
         public DateOnly DateOfBirth { get; set; }
         public ICollection<Movie> Movie { get; set; }
         public ContactInformation ContactInformation { get; set; }
-
-        public Director(string name)
-        {
-            Name = name;
-        }
     }
 }

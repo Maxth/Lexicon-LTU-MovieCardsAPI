@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MovieCardsApi.Data;
+using MovieCardsAPI.DTOs;
 using MovieCardsApi.Entities;
 using Npgsql.Internal;
 
@@ -12,6 +13,11 @@ namespace MovieCardsAPI.Services
         public MovieInfoRepository(MovieCardsDbContext context)
         {
             _context = context;
+        }
+
+        public void AddMovie(Movie movie)
+        {
+            _context.Movie.Add(movie);
         }
 
         public void DeleteMovie(Movie movie)
@@ -40,14 +46,19 @@ namespace MovieCardsAPI.Services
             return await _context.Movie.FirstOrDefaultAsync(m => m.Id == Id);
         }
 
-        public async Task<bool> MovieExistsAsync(int Id)
+        public async Task<bool> MovieWithTitleAndReleaseDateExistsAsync(
+            string title,
+            DateOnly releaseDate
+        )
         {
-            return await _context.Movie.AnyAsync(m => m.Id == Id);
+            return await _context.Movie.AnyAsync(m =>
+                m.Title.ToLower() == title.ToLower() && m.ReleaseDate == releaseDate
+            );
         }
 
-        public async Task SaveChangesAsync()
+        public Task<bool> MovieWithTitleAndReleaseDateExistsAsync()
         {
-            await _context.SaveChangesAsync();
+            throw new NotImplementedException();
         }
     }
 }

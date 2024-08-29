@@ -4,16 +4,21 @@ using MovieCardsApi.Entities;
 
 namespace MovieCardsAPI.Profiles
 {
-    class OthersProfile : Profile
+    class MiscProfile : Profile
     {
-        public OthersProfile()
+        public MiscProfile()
         {
-            CreateMap<Director, DirectorDTO>()
-                .ConstructUsing(src => new DirectorDTO(
+            CreateMap<Director, DirectorForMovieDetailsDTO>()
+                .ConstructUsing(src => new DirectorForMovieDetailsDTO(
                     src.Id,
                     src.Name,
-                    src.ContactInformation.Email
+                    src.ContactInformation.Email,
+                    src.DateOfBirth
                 ));
+
+            CreateMap<Director, DirectorForCreationDTO>().ReverseMap();
+
+            CreateMap<DirectorDTO, Director>().ReverseMap();
 
             CreateMap<Actor, ActorDTO>().ConstructUsing(src => new ActorDTO(src.Id, src.Name));
 

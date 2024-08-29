@@ -1,3 +1,4 @@
+using MovieCardsAPI.DTOs;
 using MovieCardsApi.Entities;
 
 namespace MovieCardsAPI.Services
@@ -12,8 +13,8 @@ namespace MovieCardsAPI.Services
 
         void DeleteMovie(Movie movie);
 
-        Task<bool> MovieExistsAsync(int Id);
+        Task<bool> MovieWithTitleAndReleaseDateExistsAsync(string title, DateOnly releaseDate);
 
-        Task SaveChangesAsync();
+        void AddMovie(Movie movie);
     }
 }

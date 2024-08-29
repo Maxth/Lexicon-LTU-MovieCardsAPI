@@ -1,7 +1,5 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MovieCards.Interfaces;
 using MovieCardsAPI.DTOs;
 using MovieCardsApi.Entities;
 using MovieCardsAPI.Services;
@@ -12,19 +10,28 @@ namespace MovieCardsAPI.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        private readonly IMovieInfoRepository __movieInfoRepository;
+        private readonly IRepository _repository;
+        private readonly IMovieInfoRepository _movieInfoRepository;
+        private readonly IDirectorInfoRepository _directorInfoRepository;
         private readonly IMapper _mapper;
 
-        public MoviesController(IMovieInfoRepository movieInfoRepository, IMapper mapper)
+        public MoviesController(
+            IRepository repository,
+            IMovieInfoRepository movieInfoRepository,
+            IDirectorInfoRepository directorInfoRepository,
+            IMapper mapper
+        )
         {
-            __movieInfoRepository = movieInfoRepository;
+            _repository = repository;
+            _movieInfoRepository = movieInfoRepository;
+            _directorInfoRepository = directorInfoRepository;
             _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
         {
-            var movies = await __movieInfoRepository.GetMoviesAsync();
+            var movies = await _movieInfoRepository.GetMoviesAsync();
 
             return Ok(_mapper.Map<IEnumerable<MovieDTO>>(movies));
         }
@@ -32,7 +39,7 @@ namespace MovieCardsAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MovieDTO>> GetSingleMovie(int Id)
         {
-            var movie = await __movieInfoRepository.GetSingleMovieAsync(Id);
+            var movie = await _movieInfoRepository.GetSingleMovieAsync(Id);
 
             if (movie == null)
             {
@@ -45,7 +52,7 @@ namespace MovieCardsAPI.Controllers
         [HttpGet("{id}/details")]
         public async Task<ActionResult<MovieDetailsDTO>> GetMovieDetails(int Id)
         {
-            var movie = await __movieInfoRepository.GetMovieDetailsAsync(Id);
+            var movie = await _movieInfoRepository.GetMovieDetailsAsync(Id);
 
             if (movie == null)
             {
@@ -58,64 +65,48 @@ namespace MovieCardsAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteMovie(int Id)
         {
-            var movieToDelete = await __movieInfoRepository.GetSingleMovieAsync(Id);
+            var movieToDelete = await _movieInfoRepository.GetSingleMovieAsync(Id);
 
             if (movieToDelete == null)
             {
                 return NotFound();
             }
 
-            __movieInfoRepository.DeleteMovie(movieToDelete);
+            _movieInfoRepository.DeleteMovie(movieToDelete);
 
-            await __movieInfoRepository.SaveChangesAsync();
+            await _repository.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // [HttpPost]
-        // public async Task<ActionResult> AddMovie(MovieForCreationDTO movieForCreationDto)
-        // {
-        //     if (await TitleAndReleaseDateExist(movieForCreationDto))
-        //     {
-        //         return Conflict("A movie with that title and releasedate already exists");
-        //     }
+        [HttpPost]
+        public async Task<ActionResult> AddMovie(MovieForCreationDTO movieForCreationDto)
+        {
+            if (
+                await _movieInfoRepository.MovieWithTitleAndReleaseDateExistsAsync(
+                    movieForCreationDto.Title,
+                    movieForCreationDto.ReleaseDate
+                )
+            )
+            {
+                return Conflict("A movie with that title and releasedate already exists");
+            }
 
-        //     Director? director = await FindDirector(movieForCreationDto);
+            if (!await _directorInfoRepository.DirectorExistsAsync(movieForCreationDto.DirectorId))
+            {
+                return BadRequest("There is no director with that Id. Add the director first.");
+            }
 
-        //     if (director == null)
-        //     {
-        //         director = new Director(movieForCreationDto.Director.Name)
-        //         {
-        //             DateOfBirth = movieForCreationDto.Director.DateOfBirth
-        //         };
+            var movie = _mapper.Map<Movie>(movieForCreationDto);
+            _movieInfoRepository.AddMovie(movie);
+            await _repository.SaveChangesAsync();
 
-        //         _context.Director.Add(director);
-        //         await _context.SaveChangesAsync();
-        //     }
-
-        //     var movie = new Movie(movieForCreationDto.Title)
-        //     {
-        //         ReleaseDate = movieForCreationDto.ReleaseDate,
-        //         Description = movieForCreationDto.Description,
-        //         Rating = movieForCreationDto.Rating,
-        //         DirectorId = director.Id,
-        //     };
-
-        //     _context.Movie.Add(movie);
-        //     await _context.SaveChangesAsync();
-
-        //     return CreatedAtAction(
-        //         "GetSingleMovie",
-        //         new { id = movie.Id },
-        //         new MovieDTO()
-        //         {
-        //             ReleaseDate = movie.ReleaseDate,
-        //             Rating = movie.Rating,
-        //             Title = movie.Title,
-        //             Id = movie.Id
-        //         }
-        //     );
-        // }
+            return CreatedAtAction(
+                "GetSingleMovie",
+                new { id = movie.Id },
+                _mapper.Map<MovieDTO>(movie)
+            );
+        }
 
         // [HttpPut("{id}")]
         // public async Task<ActionResult> UpdateMovie(int Id, MovieForUpdateDTO movieForUpdateDTO)

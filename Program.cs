@@ -27,6 +27,8 @@ builder.Services.AddDbContext<MovieCardsDbContext>(options =>
 });
 
 builder.Services.AddScoped<IMovieInfoRepository, MovieInfoRepository>();
+builder.Services.AddScoped<IDirectorInfoRepository, DirectorInfoRepository>();
+builder.Services.AddScoped<IRepository, Repository>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

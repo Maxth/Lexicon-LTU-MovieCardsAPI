@@ -9,7 +9,7 @@ namespace MovieCardsAPI.DTOs
         public string Rating { get; set; }
         public IEnumerable<GenreDTO> Genres { get; set; }
         public IEnumerable<ActorDTO> Actors { get; set; }
-        public DirectorDTO Director { get; set; }
+        public DirectorForMovieDetailsDTO Director { get; set; }
         public string Description { get; set; }
     }
 }
