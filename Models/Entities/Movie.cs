@@ -10,13 +10,13 @@ namespace MovieCardsApi.Entities
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(80)]
+        [MaxLength(Constants.MovieTitleMaxLength)]
         public string Title { get; set; }
 
         [Required]
         public DateOnly ReleaseDate { get; set; }
 
-        [MaxLength(200)]
+        [MaxLength(Constants.MovieDescMaxLength)]
         public string Description { get; set; }
 
         [MaxLength(3)]

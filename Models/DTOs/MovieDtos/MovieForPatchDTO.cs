@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using MovieCardsAPI.Constant;
 
 namespace MovieCardsAPI.DTOs
 {
     public class MovieForPatchDTO
     {
-        [MaxLength(80)]
+        [MaxLength(Constants.MovieTitleMaxLength)]
         public string? Title { get; set; }
 
         public DateOnly? ReleaseDate { get; set; }
@@ -12,7 +13,7 @@ namespace MovieCardsAPI.DTOs
         [MaxLength(3)]
         public string? Rating { get; set; }
 
-        [MaxLength(200)]
+        [MaxLength(Constants.MovieDescMaxLength)]
         public string? Description { get; set; }
     }
 }

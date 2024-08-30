@@ -14,8 +14,8 @@ namespace MovieCardsAPI.Profiles
                         new DirectorForMovieDetailsDTO(
                             src.Id,
                             src.Name,
-                            src?.ContactInformation?.Email,
-                            src!.DateOfBirth
+                            src.ContactInformation?.Email,
+                            src.DateOfBirth
                         )
                 );
 

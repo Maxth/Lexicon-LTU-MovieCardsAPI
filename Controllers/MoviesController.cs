@@ -87,26 +87,26 @@ namespace MovieCardsAPI.Controllers
             var movie = _mapper.Map<Movie>(movieForCreationDto);
             _movieInfoRepository.AddMovie(movie);
 
-            try
-            {
-                await _repository.SaveChangesAsync();
-            }
-            catch (UniqueConstraintException e)
-            {
-                if (e.ConstraintName.Equals(Constants.UniqueMovieIndex))
-                {
-                    return Conflict("A movie with that title and releasedate already exists");
-                }
-                throw;
-            }
-            catch (ReferenceConstraintException e)
-            {
-                if (e.ConstraintName.Equals(Constants.FK_MovieDirectorId))
-                {
-                    return UnprocessableEntity("There is no director with that Id");
-                }
-                throw;
-            }
+            // try
+            // {
+            await _repository.SaveChangesAsync();
+            // }
+            // catch (UniqueConstraintException e)
+            // {
+            //     if (e.ConstraintName.Equals(Constants.UniqueMovieIndex))
+            //     {
+            //         return Conflict("A movie with that title and releasedate already exists");
+            //     }
+            //     throw;
+            // }
+            // catch (ReferenceConstraintException e)
+            // {
+            //     if (e.ConstraintName.Equals(Constants.FK_MovieDirectorId))
+            //     {
+            //         return UnprocessableEntity("There is no director with that Id");
+            //     }
+            //     throw;
+            // }
 
             return CreatedAtAction(
                 "GetSingleMovie",
@@ -127,26 +127,7 @@ namespace MovieCardsAPI.Controllers
 
             _mapper.Map(movieForUpdateDTO, movie);
 
-            try
-            {
-                await _repository.SaveChangesAsync();
-            }
-            catch (UniqueConstraintException e)
-            {
-                if (e.ConstraintName.Equals(Constants.UniqueMovieIndex))
-                {
-                    return Conflict("A movie with that title and releasedate already exists");
-                }
-                throw;
-            }
-            catch (ReferenceConstraintException e)
-            {
-                if (e.ConstraintName.Equals(Constants.FK_MovieDirectorId))
-                {
-                    return UnprocessableEntity("There is no director with that Id");
-                }
-                throw;
-            }
+            await _repository.SaveChangesAsync();
 
             return NoContent();
         }

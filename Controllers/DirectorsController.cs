@@ -55,18 +55,7 @@ namespace MovieCardsAPI.Controllers
             var director = _mapper.Map<Director>(dto);
             _directorInfoRepository.AddDirector(director);
 
-            try
-            {
-                await _repository.SaveChangesAsync();
-            }
-            catch (UniqueConstraintException e)
-            {
-                if (e.ConstraintName.Equals(Constants.UniqueDirectorIndex))
-                {
-                    return Conflict("A director with that name and date of birth already exists");
-                }
-                throw;
-            }
+            await _repository.SaveChangesAsync();
 
             return CreatedAtAction(
                 "GetSingleDirector",

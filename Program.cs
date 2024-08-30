@@ -2,6 +2,7 @@ using dotenv.net;
 using Microsoft.EntityFrameworkCore;
 using MovieCardsApi.Data;
 using MovieCardsAPI.Extensions;
+using MovieCardsAPI.Middleware;
 using MovieCardsAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,13 +25,12 @@ builder.Services.AddDbContext<MovieCardsDbContext>(options =>
 {
     DotEnv.Load();
     string? dbUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-    options.UseNpgsql(dbUrl ?? throw new ArgumentNullException(dbUrl));
+    options.UseNpgsql(dbUrl ?? throw new ArgumentNullException(nameof(dbUrl)));
 });
 
 builder.Services.AddScoped<IMovieInfoRepository, MovieInfoRepository>();
 builder.Services.AddScoped<IDirectorInfoRepository, DirectorInfoRepository>();
 builder.Services.AddScoped<IRepository, Repository>();
-
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
@@ -46,7 +46,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
 
 app.Run();

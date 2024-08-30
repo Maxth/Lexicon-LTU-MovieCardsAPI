@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using MovieCardsAPI.Constant;
 
 namespace MovieCardsAPI.DTOs
 {
@@ -7,7 +8,7 @@ namespace MovieCardsAPI.DTOs
     public class MovieForCreationDTO
     {
         [Required]
-        [MaxLength(80)]
+        [MaxLength(Constants.MovieTitleMaxLength)]
         public string Title { get; set; }
 
         [Required]
@@ -19,7 +20,7 @@ namespace MovieCardsAPI.DTOs
         [Required]
         public int? DirectorId { get; set; }
 
-        [MaxLength(200)]
+        [MaxLength(Constants.MovieDescMaxLength)]
         public string Description { get; set; }
     }
 }
