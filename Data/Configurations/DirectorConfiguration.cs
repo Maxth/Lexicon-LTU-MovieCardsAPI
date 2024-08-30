@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using MovieCardsAPI.Constant;
 using MovieCardsApi.Entities;
 
 namespace MovieCardsAPI.Configurations
@@ -8,7 +9,9 @@ namespace MovieCardsAPI.Configurations
     {
         public void Configure(EntityTypeBuilder<Director> builder)
         {
-            builder.HasIndex(x => new { x.Name, x.DateOfBirth }).IsUnique(true);
+            builder
+                .HasIndex(x => new { x.Name, x.DateOfBirth }, Constants.UniqueDirectorIndex)
+                .IsUnique(true);
         }
     }
 }

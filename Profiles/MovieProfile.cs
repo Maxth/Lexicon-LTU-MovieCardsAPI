@@ -15,6 +15,8 @@ namespace MovieCardsAPI.Profiles
                 .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actor));
 
             CreateMap<MovieForCreationDTO, Movie>().ReverseMap();
+
+            CreateMap<MovieForUpdateDTO, Movie>().ReverseMap();
         }
     }
 }

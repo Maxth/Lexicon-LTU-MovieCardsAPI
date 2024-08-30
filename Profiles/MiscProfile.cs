@@ -9,12 +9,15 @@ namespace MovieCardsAPI.Profiles
         public MiscProfile()
         {
             CreateMap<Director, DirectorForMovieDetailsDTO>()
-                .ConstructUsing(src => new DirectorForMovieDetailsDTO(
-                    src.Id,
-                    src.Name,
-                    src.ContactInformation.Email,
-                    src.DateOfBirth
-                ));
+                .ConstructUsing(
+                    (src, dest) =>
+                        new DirectorForMovieDetailsDTO(
+                            src.Id,
+                            src.Name,
+                            src?.ContactInformation?.Email,
+                            src!.DateOfBirth
+                        )
+                );
 
             CreateMap<Director, DirectorForCreationDTO>().ReverseMap();
 

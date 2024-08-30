@@ -11,7 +11,7 @@ namespace MovieCardsAPI.DTOs
         public string Title { get; set; }
 
         [Required]
-        public DateOnly ReleaseDate { get; set; }
+        public DateOnly? ReleaseDate { get; set; }
 
         [MaxLength(3)]
         public string Rating { get; set; }

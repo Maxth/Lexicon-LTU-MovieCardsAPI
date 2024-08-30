@@ -1,3 +1,4 @@
+using EntityFramework.Exceptions.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 using MovieCardsAPI.Configurations;
 using MovieCardsApi.Entities;
@@ -16,6 +17,11 @@ namespace MovieCardsApi.Data
         {
             modelBuilder.ApplyConfiguration(new DirectorConfigurations());
             modelBuilder.ApplyConfiguration(new MovieConfigurations());
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseExceptionProcessor();
         }
     }
 }

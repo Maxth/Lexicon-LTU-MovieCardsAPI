@@ -157,7 +157,7 @@ namespace MovieCardsAPI.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Director_Name_DateOfBirth",
+                name: "Unique_Director_Index",
                 table: "Director",
                 columns: new[] { "Name", "DateOfBirth" },
                 unique: true);
@@ -173,7 +173,7 @@ namespace MovieCardsAPI.Migrations
                 column: "DirectorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Movie_Title_ReleaseDate",
+                name: "Unique_Movie_Index",
                 table: "Movie",
                 columns: new[] { "Title", "ReleaseDate" },
                 unique: true);

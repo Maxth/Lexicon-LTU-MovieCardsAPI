@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MovieCardsAPI.Migrations
 {
     [DbContext(typeof(MovieCardsDbContext))]
-    [Migration("20240828083542_Init")]
+    [Migration("20240830125209_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -119,7 +119,7 @@ namespace MovieCardsAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name", "DateOfBirth")
+                    b.HasIndex(new[] { "Name", "DateOfBirth" }, "Unique_Director_Index")
                         .IsUnique();
 
                     b.ToTable("Director");
@@ -174,7 +174,7 @@ namespace MovieCardsAPI.Migrations
 
                     b.HasIndex("DirectorId");
 
-                    b.HasIndex("Title", "ReleaseDate")
+                    b.HasIndex(new[] { "Title", "ReleaseDate" }, "Unique_Movie_Index")
                         .IsUnique();
 
                     b.ToTable("Movie");

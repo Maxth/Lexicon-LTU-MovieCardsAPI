@@ -1,5 +1,7 @@
 using AutoMapper;
+using EntityFramework.Exceptions.Common;
 using Microsoft.AspNetCore.Mvc;
+using MovieCardsAPI.Constant;
 using MovieCardsAPI.DTOs;
 using MovieCardsApi.Entities;
 using MovieCardsAPI.Services;
@@ -82,24 +84,29 @@ namespace MovieCardsAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> AddMovie(MovieForCreationDTO movieForCreationDto)
         {
-            if (
-                await _movieInfoRepository.MovieWithTitleAndReleaseDateExistsAsync(
-                    movieForCreationDto.Title,
-                    movieForCreationDto.ReleaseDate
-                )
-            )
-            {
-                return Conflict("A movie with that title and releasedate already exists");
-            }
-
-            if (!await _directorInfoRepository.DirectorExistsAsync(movieForCreationDto.DirectorId))
-            {
-                return BadRequest("There is no director with that Id. Add the director first.");
-            }
-
             var movie = _mapper.Map<Movie>(movieForCreationDto);
             _movieInfoRepository.AddMovie(movie);
-            await _repository.SaveChangesAsync();
+
+            try
+            {
+                await _repository.SaveChangesAsync();
+            }
+            catch (UniqueConstraintException e)
+            {
+                if (e.ConstraintName.Equals(Constants.UniqueMovieIndex))
+                {
+                    return Conflict("A movie with that title and releasedate already exists");
+                }
+                throw;
+            }
+            catch (ReferenceConstraintException e)
+            {
+                if (e.ConstraintName.Equals(Constants.FK_MovieDirectorId))
+                {
+                    return UnprocessableEntity("There is no director with that Id");
+                }
+                throw;
+            }
 
             return CreatedAtAction(
                 "GetSingleMovie",
@@ -108,52 +115,40 @@ namespace MovieCardsAPI.Controllers
             );
         }
 
-        // [HttpPut("{id}")]
-        // public async Task<ActionResult> UpdateMovie(int Id, MovieForUpdateDTO movieForUpdateDTO)
-        // {
-        //     if (await TitleAndReleaseDateExist(movieForUpdateDTO))
-        //     {
-        //         return Conflict("A movie with that title and releasedate already exists");
-        //     }
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateMovie(int Id, MovieForUpdateDTO movieForUpdateDTO)
+        {
+            var movie = await _movieInfoRepository.GetSingleMovieAsync(Id);
 
-        //     if (
-        //         await _context
-        //             .Director.Where(d => d.Id == movieForUpdateDTO.DirectorId)
-        //             .FirstOrDefaultAsync() == null
-        //     )
-        //     {
-        //         return BadRequest("There is no director with that Id");
-        //     }
+            if (movie is null)
+            {
+                return NotFound();
+            }
 
-        //     var movie = new Movie(movieForUpdateDTO.Title)
-        //     {
-        //         Id = Id,
-        //         ReleaseDate = movieForUpdateDTO.ReleaseDate,
-        //         Rating = movieForUpdateDTO.Rating,
-        //         Description = movieForUpdateDTO.Description,
-        //         DirectorId = movieForUpdateDTO.DirectorId,
-        //     };
+            _mapper.Map(movieForUpdateDTO, movie);
 
-        //     _context.Entry(movie).State = EntityState.Modified;
-        //     await _context.SaveChangesAsync();
+            try
+            {
+                await _repository.SaveChangesAsync();
+            }
+            catch (UniqueConstraintException e)
+            {
+                if (e.ConstraintName.Equals(Constants.UniqueMovieIndex))
+                {
+                    return Conflict("A movie with that title and releasedate already exists");
+                }
+                throw;
+            }
+            catch (ReferenceConstraintException e)
+            {
+                if (e.ConstraintName.Equals(Constants.FK_MovieDirectorId))
+                {
+                    return UnprocessableEntity("There is no director with that Id");
+                }
+                throw;
+            }
 
-        //     return NoContent();
-        // }
-
-        // private async Task<bool> TitleAndReleaseDateExist(IMovieCreationOrUpdateDto movieDto)
-        // {
-        //     return await _context.Movie.AnyAsync(m =>
-        //         String.Equals(m.Title.ToLower(), movieDto.Title.ToLower())
-        //         && m.ReleaseDate == movieDto.ReleaseDate
-        //     );
-        // }
-
-        // private async Task<Director?> FindDirector(MovieForCreationDTO movieDto)
-        // {
-        //     return await _context.Director.FirstOrDefaultAsync(d =>
-        //         string.Equals(d.Name.ToLower(), movieDto.Director.Name.ToLower())
-        //         && d.DateOfBirth == movieDto.Director.DateOfBirth
-        //     );
-        // }
+            return NoContent();
+        }
     }
 }

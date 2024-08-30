@@ -1,5 +1,7 @@
 using AutoMapper;
+using EntityFramework.Exceptions.Common;
 using Microsoft.AspNetCore.Mvc;
+using MovieCardsAPI.Constant;
 using MovieCardsAPI.DTOs;
 using MovieCardsApi.Entities;
 using MovieCardsAPI.Services;
@@ -50,20 +52,21 @@ namespace MovieCardsAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> AddDirector(DirectorForCreationDTO dto)
         {
-            if (
-                await _directorInfoRepository.DirectorWithNameAndDobExistsAsync(
-                    dto.Name,
-                    dto.DateOfBirth
-                )
-            )
-            {
-                return Conflict("A director with that name and date of birt already exists");
-            }
-
             var director = _mapper.Map<Director>(dto);
-
             _directorInfoRepository.AddDirector(director);
-            await _repository.SaveChangesAsync();
+
+            try
+            {
+                await _repository.SaveChangesAsync();
+            }
+            catch (UniqueConstraintException e)
+            {
+                if (e.ConstraintName.Equals(Constants.UniqueDirectorIndex))
+                {
+                    return Conflict("A director with that name and date of birth already exists");
+                }
+                throw;
+            }
 
             return CreatedAtAction(
                 "GetSingleDirector",

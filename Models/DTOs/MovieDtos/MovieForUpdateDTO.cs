@@ -6,10 +6,10 @@ namespace MovieCardsAPI.DTOs
     {
         [Required]
         [MaxLength(80)]
-        public string Title { get; set; }
+        public required string Title { get; set; }
 
         [Required]
-        public DateOnly ReleaseDate { get; set; }
+        public DateOnly? ReleaseDate { get; set; }
 
         [MaxLength(3)]
         public string? Rating { get; set; }
@@ -18,11 +18,6 @@ namespace MovieCardsAPI.DTOs
         public string? Description { get; set; }
 
         [Required]
-        public int DirectorId { get; set; }
-
-        public MovieForUpdateDTO(string title)
-        {
-            Title = title;
-        }
+        public int? DirectorId { get; set; }
     }
 }

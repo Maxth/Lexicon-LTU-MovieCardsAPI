@@ -13,6 +13,7 @@ builder
         //demanding other formats
         options.ReturnHttpNotAcceptable = true;
     })
+    .AddNewtonsoftJson()
     //Add XML output support
     .AddXmlDataContractSerializerFormatters();
 

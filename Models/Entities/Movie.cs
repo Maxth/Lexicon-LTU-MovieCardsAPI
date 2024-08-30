@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using MovieCardsAPI.Constant;
 
 namespace MovieCardsApi.Entities
 #nullable disable
@@ -21,6 +23,7 @@ namespace MovieCardsApi.Entities
         public string Rating { get; set; }
 
         //Foreign key
+        [ForeignKey(Constants.FK_MovieDirectorId)]
         public int DirectorId { get; set; }
 
         //Navigation props

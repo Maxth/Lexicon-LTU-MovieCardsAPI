@@ -116,7 +116,7 @@ namespace MovieCardsAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name", "DateOfBirth")
+                    b.HasIndex(new[] { "Name", "DateOfBirth" }, "Unique_Director_Index")
                         .IsUnique();
 
                     b.ToTable("Director");
@@ -171,7 +171,7 @@ namespace MovieCardsAPI.Migrations
 
                     b.HasIndex("DirectorId");
 
-                    b.HasIndex("Title", "ReleaseDate")
+                    b.HasIndex(new[] { "Title", "ReleaseDate" }, "Unique_Movie_Index")
                         .IsUnique();
 
                     b.ToTable("Movie");
