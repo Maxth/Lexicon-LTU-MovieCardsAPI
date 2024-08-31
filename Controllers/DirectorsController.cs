@@ -41,7 +41,7 @@ namespace MovieCardsAPI.Controllers
         {
             var director = await _directorInfoRepository.GetDirectorAsync(Id);
 
-            if (director == null)
+            if (director is null)
             {
                 return NotFound();
             }

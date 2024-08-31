@@ -1,15 +1,14 @@
-using System.Data.Common;
 using System.Net;
 using EntityFramework.Exceptions.Common;
 using MovieCardsAPI.Constant;
 
 namespace MovieCardsAPI.Middleware
 {
-    public class ExceptionHandlingMiddleware
+    public class CustomExceptionHandler
     {
         private readonly RequestDelegate _next;
 
-        public ExceptionHandlingMiddleware(RequestDelegate next)
+        public CustomExceptionHandler(RequestDelegate next)
         {
             _next = next;
         }

@@ -43,10 +43,10 @@ if (app.Environment.IsDevelopment())
     await app.SeedDataAsync();
 }
 
+app.UseMiddleware<CustomExceptionHandler>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
 
 app.Run();

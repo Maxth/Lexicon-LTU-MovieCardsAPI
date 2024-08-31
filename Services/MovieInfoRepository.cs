@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MovieCardsApi.Data;
-using MovieCardsAPI.DTOs;
 using MovieCardsApi.Entities;
-using Npgsql.Internal;
 
 namespace MovieCardsAPI.Services
 {
@@ -44,16 +42,6 @@ namespace MovieCardsAPI.Services
         public async Task<Movie?> GetSingleMovieAsync(int Id)
         {
             return await _context.Movie.FirstOrDefaultAsync(m => m.Id == Id);
-        }
-
-        public async Task<bool> MovieWithTitleAndReleaseDateExistsAsync(
-            string title,
-            DateOnly releaseDate
-        )
-        {
-            return await _context.Movie.AnyAsync(m =>
-                m.Title.ToLower() == title.ToLower() && m.ReleaseDate == releaseDate
-            );
         }
 
         public Task<bool> MovieWithTitleAndReleaseDateExistsAsync()

@@ -13,8 +13,6 @@ namespace MovieCardsAPI.Services
 
         void DeleteMovie(Movie movie);
 
-        Task<bool> MovieWithTitleAndReleaseDateExistsAsync(string title, DateOnly releaseDate);
-
         void AddMovie(Movie movie);
     }
 }

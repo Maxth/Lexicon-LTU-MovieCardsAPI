@@ -23,13 +23,6 @@ namespace MovieCardsAPI.Services
             return await _context.Director.AnyAsync(d => d.Id == Id);
         }
 
-        public async Task<bool> DirectorWithNameAndDobExistsAsync(string name, DateOnly dob)
-        {
-            return await _context.Director.AnyAsync(d =>
-                d.Name.ToLower() == name.ToLower() && d.DateOfBirth == dob
-            );
-        }
-
         public async Task<Director?> GetDirectorAsync(int Id)
         {
             return await _context.Director.FirstOrDefaultAsync(d => d.Id == Id);

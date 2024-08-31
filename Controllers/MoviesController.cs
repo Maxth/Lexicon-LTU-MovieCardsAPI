@@ -14,19 +14,16 @@ namespace MovieCardsAPI.Controllers
     {
         private readonly IRepository _repository;
         private readonly IMovieInfoRepository _movieInfoRepository;
-        private readonly IDirectorInfoRepository _directorInfoRepository;
         private readonly IMapper _mapper;
 
         public MoviesController(
             IRepository repository,
             IMovieInfoRepository movieInfoRepository,
-            IDirectorInfoRepository directorInfoRepository,
             IMapper mapper
         )
         {
             _repository = repository;
             _movieInfoRepository = movieInfoRepository;
-            _directorInfoRepository = directorInfoRepository;
             _mapper = mapper;
         }
 
@@ -43,7 +40,7 @@ namespace MovieCardsAPI.Controllers
         {
             var movie = await _movieInfoRepository.GetSingleMovieAsync(Id);
 
-            if (movie == null)
+            if (movie is null)
             {
                 return NotFound();
             }
@@ -56,7 +53,7 @@ namespace MovieCardsAPI.Controllers
         {
             var movie = await _movieInfoRepository.GetMovieDetailsAsync(Id);
 
-            if (movie == null)
+            if (movie is null)
             {
                 return NotFound();
             }
@@ -69,7 +66,7 @@ namespace MovieCardsAPI.Controllers
         {
             var movieToDelete = await _movieInfoRepository.GetSingleMovieAsync(Id);
 
-            if (movieToDelete == null)
+            if (movieToDelete is null)
             {
                 return NotFound();
             }
@@ -87,26 +84,7 @@ namespace MovieCardsAPI.Controllers
             var movie = _mapper.Map<Movie>(movieForCreationDto);
             _movieInfoRepository.AddMovie(movie);
 
-            // try
-            // {
             await _repository.SaveChangesAsync();
-            // }
-            // catch (UniqueConstraintException e)
-            // {
-            //     if (e.ConstraintName.Equals(Constants.UniqueMovieIndex))
-            //     {
-            //         return Conflict("A movie with that title and releasedate already exists");
-            //     }
-            //     throw;
-            // }
-            // catch (ReferenceConstraintException e)
-            // {
-            //     if (e.ConstraintName.Equals(Constants.FK_MovieDirectorId))
-            //     {
-            //         return UnprocessableEntity("There is no director with that Id");
-            //     }
-            //     throw;
-            // }
 
             return CreatedAtAction(
                 "GetSingleMovie",
