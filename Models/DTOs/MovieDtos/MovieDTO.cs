@@ -6,6 +6,6 @@ namespace MovieCardsAPI.DTOs
         public int Id { get; set; }
         public string Title { get; set; }
         public DateOnly ReleaseDate { get; set; }
-        public string Rating { get; set; }
+        public double? Rating { get; set; }
     }
 }

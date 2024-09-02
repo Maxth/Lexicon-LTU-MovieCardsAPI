@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MovieCardsAPI.Constant;
+using MovieCardsAPI.CustomValidations;
 
 namespace MovieCardsAPI.DTOs
 {
@@ -12,10 +13,10 @@ namespace MovieCardsAPI.DTOs
         public string Title { get; set; }
 
         [Required]
-        public DateOnly? ReleaseDate { get; set; }
+        public DateOnly ReleaseDate { get; set; }
 
-        [MaxLength(3)]
-        public string Rating { get; set; }
+        [ValidateRatingFormat]
+        public double? Rating { get; set; }
 
         [Required]
         public int? DirectorId { get; set; }

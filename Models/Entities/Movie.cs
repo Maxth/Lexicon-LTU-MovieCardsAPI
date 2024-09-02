@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MovieCardsAPI.Constant;
+using MovieCardsAPI.CustomValidations;
 
 namespace MovieCardsApi.Entities
 #nullable disable
@@ -19,8 +20,8 @@ namespace MovieCardsApi.Entities
         [MaxLength(Constants.MovieDescMaxLength)]
         public string Description { get; set; }
 
-        [MaxLength(3)]
-        public string Rating { get; set; }
+        [ValidateRatingFormat]
+        public double? Rating { get; set; }
 
         //Foreign key
         [ForeignKey(Constants.FK_MovieDirectorId)]

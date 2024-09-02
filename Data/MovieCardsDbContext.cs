@@ -12,11 +12,13 @@ namespace MovieCardsApi.Data
 
         public DbSet<Director> Director => Set<Director>();
         public DbSet<Movie> Movie => Set<Movie>();
+        public DbSet<Actor> Actor => Set<Actor>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new DirectorConfigurations());
             modelBuilder.ApplyConfiguration(new MovieConfigurations());
+            modelBuilder.ApplyConfiguration(new ActorConfigurations());
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

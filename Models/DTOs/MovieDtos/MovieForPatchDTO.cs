@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using MovieCardsAPI.Constant;
+using MovieCardsAPI.CustomValidations;
 
 namespace MovieCardsAPI.DTOs
 {
@@ -8,10 +9,8 @@ namespace MovieCardsAPI.DTOs
         [MaxLength(Constants.MovieTitleMaxLength)]
         public string? Title { get; set; }
 
-        public DateOnly? ReleaseDate { get; set; }
-
-        [MaxLength(3)]
-        public string? Rating { get; set; }
+        [ValidateRatingFormat]
+        public double? Rating { get; set; }
 
         [MaxLength(Constants.MovieDescMaxLength)]
         public string? Description { get; set; }

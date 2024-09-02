@@ -59,7 +59,7 @@ namespace MovieCardsAPI.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Email = table.Column<string>(type: "text", nullable: true),
+                    Email = table.Column<string>(type: "text", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: true),
                     DirectorId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -83,7 +83,7 @@ namespace MovieCardsAPI.Migrations
                     Title = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
                     ReleaseDate = table.Column<DateOnly>(type: "date", nullable: false),
                     Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    Rating = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: true),
+                    Rating = table.Column<double>(type: "double precision", nullable: true),
                     DirectorId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -146,6 +146,12 @@ namespace MovieCardsAPI.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "Unique_Actor_Index",
+                table: "Actor",
+                columns: new[] { "Name", "DateOfBirth" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ActorMovie_MovieId",
                 table: "ActorMovie",
                 column: "MovieId");
@@ -175,7 +181,7 @@ namespace MovieCardsAPI.Migrations
             migrationBuilder.CreateIndex(
                 name: "Unique_Movie_Index",
                 table: "Movie",
-                columns: new[] { "Title", "ReleaseDate" },
+                column: "Title",
                 unique: true);
         }
 

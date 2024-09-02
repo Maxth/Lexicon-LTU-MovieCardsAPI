@@ -76,7 +76,7 @@ namespace MovieCardsApi.Data
                         new DateOnly(1900, 01, 01),
                         new DateOnly(2024, 01, 01)
                     ),
-                    Rating = faker.Random.Double(0, 5).ToString("0.0"),
+                    Rating = double.Round(faker.Random.Double(0, 10), 1),
                     Description = faker.Lorem.Sentence(8),
                     Actor = actors,
                     Genre = genres

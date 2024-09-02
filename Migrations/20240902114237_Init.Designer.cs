@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MovieCardsAPI.Migrations
 {
     [DbContext(typeof(MovieCardsDbContext))]
-    [Migration("20240830125209_Init")]
+    [Migration("20240902114237_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -73,6 +73,9 @@ namespace MovieCardsAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex(new[] { "Name", "DateOfBirth" }, "Unique_Actor_Index")
+                        .IsUnique();
+
                     b.ToTable("Actor");
                 });
 
@@ -88,6 +91,7 @@ namespace MovieCardsAPI.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
@@ -158,9 +162,8 @@ namespace MovieCardsAPI.Migrations
                     b.Property<int>("DirectorId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Rating")
-                        .HasMaxLength(3)
-                        .HasColumnType("character varying(3)");
+                    b.Property<double?>("Rating")
+                        .HasColumnType("double precision");
 
                     b.Property<DateOnly>("ReleaseDate")
                         .HasColumnType("date");
@@ -174,7 +177,7 @@ namespace MovieCardsAPI.Migrations
 
                     b.HasIndex("DirectorId");
 
-                    b.HasIndex(new[] { "Title", "ReleaseDate" }, "Unique_Movie_Index")
+                    b.HasIndex(new[] { "Title" }, "Unique_Movie_Index")
                         .IsUnique();
 
                     b.ToTable("Movie");

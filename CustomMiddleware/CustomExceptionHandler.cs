@@ -48,6 +48,14 @@ namespace MovieCardsAPI.Middleware
                         );
                         break;
                     }
+                    if (ex.ConstraintName.Equals(Constants.UniqueActorIndex))
+                    {
+                        response = new ExceptionResponse(
+                            HttpStatusCode.Conflict,
+                            Constants.ActorExistErrMsg
+                        );
+                        break;
+                    }
                     break;
                 case ReferenceConstraintException ex:
                     if (ex.ConstraintName.Equals(Constants.FK_MovieDirectorId))
