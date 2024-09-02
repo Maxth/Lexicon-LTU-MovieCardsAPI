@@ -20,7 +20,6 @@ namespace MovieCardsApi.Entities
         [MaxLength(Constants.MovieDescMaxLength)]
         public string Description { get; set; }
 
-        [ValidateRatingFormat]
         public double? Rating { get; set; }
 
         //Foreign key

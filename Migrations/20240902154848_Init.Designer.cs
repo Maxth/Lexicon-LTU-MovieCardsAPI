@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MovieCardsAPI.Migrations
 {
     [DbContext(typeof(MovieCardsDbContext))]
-    [Migration("20240902114237_Init")]
+    [Migration("20240902154848_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -163,6 +163,7 @@ namespace MovieCardsAPI.Migrations
                         .HasColumnType("integer");
 
                     b.Property<double?>("Rating")
+                        .HasPrecision(3, 1)
                         .HasColumnType("double precision");
 
                     b.Property<DateOnly>("ReleaseDate")
@@ -180,7 +181,10 @@ namespace MovieCardsAPI.Migrations
                     b.HasIndex(new[] { "Title" }, "Unique_Movie_Index")
                         .IsUnique();
 
-                    b.ToTable("Movie");
+                    b.ToTable("Movie", t =>
+                        {
+                            t.HasCheckConstraint("RatingRangeConstraint", "\"Rating\"::double precision >= 0.0 AND \"Rating\"::double precision <= 10.0");
+                        });
                 });
 
             modelBuilder.Entity("ActorMovie", b =>

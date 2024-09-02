@@ -83,12 +83,13 @@ namespace MovieCardsAPI.Migrations
                     Title = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
                     ReleaseDate = table.Column<DateOnly>(type: "date", nullable: false),
                     Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    Rating = table.Column<double>(type: "double precision", nullable: true),
+                    Rating = table.Column<double>(type: "double precision", precision: 3, scale: 1, nullable: true),
                     DirectorId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Movie", x => x.Id);
+                    table.CheckConstraint("RatingRangeConstraint", "\"Rating\"::double precision >= 0.0 AND \"Rating\"::double precision <= 10.0");
                     table.ForeignKey(
                         name: "FK_Movie_Director_DirectorId",
                         column: x => x.DirectorId,

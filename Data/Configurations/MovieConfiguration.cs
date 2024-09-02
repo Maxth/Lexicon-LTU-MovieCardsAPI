@@ -15,6 +15,16 @@ namespace MovieCardsAPI.Configurations
             builder
                 .Property(x => x.ReleaseDate)
                 .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
+
+            builder
+                .ToTable(table =>
+                    table.HasCheckConstraint(
+                        "RatingRangeConstraint",
+                        "\"Rating\"::double precision >= 0.0 AND \"Rating\"::double precision <= 10.0"
+                    )
+                )
+                .Property(x => x.Rating)
+                .HasPrecision(3, 1);
         }
     }
 }

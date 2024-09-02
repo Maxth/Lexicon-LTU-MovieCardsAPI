@@ -23,6 +23,7 @@ namespace MovieCardsApi.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            //Catch common DB-exceptions in an easy way with the help of package EntityFramework.Exceptions
             optionsBuilder.UseExceptionProcessor();
         }
     }
