@@ -8,6 +8,11 @@ namespace MovieCardsAPI.CustomValidations
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext _)
         {
+            if (value is null)
+            {
+                return ValidationResult.Success;
+            }
+
             const string errorMessage =
                 "Rating need to be a value (optionally with one decimal) in the range of 0 to 10";
             if (value is double input)

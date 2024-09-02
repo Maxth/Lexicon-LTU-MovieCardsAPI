@@ -17,6 +17,7 @@ namespace MovieCardsAPI.Profiles
             CreateMap<MovieForCreationDTO, Movie>().ReverseMap();
 
             CreateMap<MovieForUpdateDTO, Movie>().ReverseMap();
+            CreateMap<MovieForPatchDTO, Movie>().ReverseMap();
         }
     }
 }

@@ -7,7 +7,8 @@ namespace MovieCardsAPI.DTOs
     public class MovieForPatchDTO
     {
         [MaxLength(Constants.MovieTitleMaxLength)]
-        public string? Title { get; set; }
+        [Required]
+        public required string Title { get; set; }
 
         [ValidateRatingFormat]
         public double? Rating { get; set; }

@@ -1,5 +1,6 @@
 using AutoMapper;
 using EntityFramework.Exceptions.Common;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using MovieCardsAPI.Constant;
 using MovieCardsAPI.DTOs;
@@ -105,6 +106,39 @@ namespace MovieCardsAPI.Controllers
 
             _mapper.Map(movieForUpdateDTO, movie);
 
+            await _repository.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> PatchMovie(
+            int Id,
+            JsonPatchDocument<MovieForPatchDTO> jsonPatchDocument
+        )
+        {
+            var movie = await _movieInfoRepository.GetSingleMovieAsync(Id);
+
+            if (movie is null)
+            {
+                return NotFound();
+            }
+
+            var movieToPatchDto = _mapper.Map<MovieForPatchDTO>(movie);
+
+            jsonPatchDocument.ApplyTo(movieToPatchDto, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!TryValidateModel(movieToPatchDto))
+            {
+                return BadRequest(ModelState);
+            }
+
+            _mapper.Map(movieToPatchDto, movie);
             await _repository.SaveChangesAsync();
 
             return NoContent();
