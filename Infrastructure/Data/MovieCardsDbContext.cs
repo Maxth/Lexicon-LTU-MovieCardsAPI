@@ -15,6 +15,9 @@ namespace Infrastructure.Data
         public DbSet<Movie> Movie => Set<Movie>();
         public DbSet<Actor> Actor => Set<Actor>();
 
+        private readonly string _pathToEnv =
+            $"{Directory.GetCurrentDirectory()}/../Infrastructure/.env";
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new DirectorConfigurations());
@@ -24,7 +27,7 @@ namespace Infrastructure.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            DotEnv.Load();
+            DotEnv.Load(options: new DotEnvOptions(envFilePaths: new[] { _pathToEnv }));
             string? dbUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
             optionsBuilder
                 .UseNpgsql(

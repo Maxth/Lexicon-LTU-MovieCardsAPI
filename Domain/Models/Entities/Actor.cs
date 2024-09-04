@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Domain.Models.Entities.Joins;
 
 namespace Domain.Models.Entities
 {
@@ -13,6 +14,9 @@ namespace Domain.Models.Entities
 
         [Required]
         public DateOnly DateOfBirth { get; set; }
+
         public ICollection<Movie> Movie { get; set; }
+
+        public ICollection<ActorMovie> ActorMovie { get; set; }
     }
 }

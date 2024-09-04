@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MovieCardsDbContext))]
-    [Migration("20240903195408_Init")]
+    [Migration("20240904053227_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -24,21 +24,6 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("ActorMovie", b =>
-                {
-                    b.Property<int>("ActorId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ActorId", "MovieId");
-
-                    b.HasIndex("MovieId");
-
-                    b.ToTable("ActorMovie");
-                });
 
             modelBuilder.Entity("Domain.Models.Entities.Actor", b =>
                 {
@@ -132,6 +117,21 @@ namespace Infrastructure.Migrations
                     b.ToTable("Genre");
                 });
 
+            modelBuilder.Entity("Domain.Models.Entities.Joins.ActorMovie", b =>
+                {
+                    b.Property<int>("ActorId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MovieId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ActorId", "MovieId");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("ActorMovie");
+                });
+
             modelBuilder.Entity("Domain.Models.Entities.Movie", b =>
                 {
                     b.Property<int>("Id")
@@ -187,21 +187,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("GenreMovie");
                 });
 
-            modelBuilder.Entity("ActorMovie", b =>
-                {
-                    b.HasOne("Domain.Models.Entities.Actor", null)
-                        .WithMany()
-                        .HasForeignKey("ActorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Models.Entities.Movie", null)
-                        .WithMany()
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Domain.Models.Entities.ContactInformation", b =>
                 {
                     b.HasOne("Domain.Models.Entities.Director", "Director")
@@ -213,13 +198,35 @@ namespace Infrastructure.Migrations
                     b.Navigation("Director");
                 });
 
+            modelBuilder.Entity("Domain.Models.Entities.Joins.ActorMovie", b =>
+                {
+                    b.HasOne("Domain.Models.Entities.Actor", "Actor")
+                        .WithMany("ActorMovie")
+                        .HasForeignKey("ActorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_ActorMovie_Actor");
+
+                    b.HasOne("Domain.Models.Entities.Movie", "Movie")
+                        .WithMany("ActorMovie")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_ActorMovie_Movie");
+
+                    b.Navigation("Actor");
+
+                    b.Navigation("Movie");
+                });
+
             modelBuilder.Entity("Domain.Models.Entities.Movie", b =>
                 {
                     b.HasOne("Domain.Models.Entities.Director", "Director")
                         .WithMany("Movie")
                         .HasForeignKey("DirectorId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Movie_Director");
 
                     b.Navigation("Director");
                 });
@@ -239,11 +246,21 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Models.Entities.Actor", b =>
+                {
+                    b.Navigation("ActorMovie");
+                });
+
             modelBuilder.Entity("Domain.Models.Entities.Director", b =>
                 {
                     b.Navigation("ContactInformation");
 
                     b.Navigation("Movie");
+                });
+
+            modelBuilder.Entity("Domain.Models.Entities.Movie", b =>
+                {
+                    b.Navigation("ActorMovie");
                 });
 #pragma warning restore 612, 618
         }

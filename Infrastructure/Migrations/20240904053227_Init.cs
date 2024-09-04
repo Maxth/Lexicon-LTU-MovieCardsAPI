@@ -91,7 +91,7 @@ namespace Infrastructure.Migrations
                     table.PrimaryKey("PK_Movie", x => x.Id);
                     table.CheckConstraint("RatingRangeConstraint", "\"Rating\"::double precision >= 0.0 AND \"Rating\"::double precision <= 10.0");
                     table.ForeignKey(
-                        name: "FK_Movie_Director_DirectorId",
+                        name: "FK_Movie_Director",
                         column: x => x.DirectorId,
                         principalTable: "Director",
                         principalColumn: "Id",
@@ -102,20 +102,20 @@ namespace Infrastructure.Migrations
                 name: "ActorMovie",
                 columns: table => new
                 {
-                    ActorId = table.Column<int>(type: "integer", nullable: false),
-                    MovieId = table.Column<int>(type: "integer", nullable: false)
+                    MovieId = table.Column<int>(type: "integer", nullable: false),
+                    ActorId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ActorMovie", x => new { x.ActorId, x.MovieId });
                     table.ForeignKey(
-                        name: "FK_ActorMovie_Actor_ActorId",
+                        name: "FK_ActorMovie_Actor",
                         column: x => x.ActorId,
                         principalTable: "Actor",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ActorMovie_Movie_MovieId",
+                        name: "FK_ActorMovie_Movie",
                         column: x => x.MovieId,
                         principalTable: "Movie",
                         principalColumn: "Id",

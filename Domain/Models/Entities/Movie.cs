@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Constants;
+using Domain.Models.Entities.Joins;
 
 namespace Domain.Models.Entities
 #nullable disable
@@ -22,12 +23,14 @@ namespace Domain.Models.Entities
         public double? Rating { get; set; }
 
         //Foreign key
-        [ForeignKey(ConstVars.FK_MovieDirectorId)]
         public int DirectorId { get; set; }
 
         //Navigation props
         public Director Director { get; set; }
+
         public ICollection<Actor> Actor { get; set; }
         public ICollection<Genre> Genre { get; set; }
+
+        public ICollection<ActorMovie> ActorMovie { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace Infrastructure.Data.Configurations
         public void Configure(EntityTypeBuilder<Movie> builder)
         {
             builder.HasIndex(x => x.Title, ConstVars.UniqueMovieIndex).IsUnique(true);
+
             //Ensure releasedate can only be set on first insert
             builder
                 .Property(x => x.ReleaseDate)
@@ -25,6 +26,12 @@ namespace Infrastructure.Data.Configurations
                 )
                 .Property(x => x.Rating)
                 .HasPrecision(3, 1);
+
+            builder
+                .HasOne(m => m.Director)
+                .WithMany(d => d.Movie)
+                .HasForeignKey(m => m.DirectorId)
+                .HasConstraintName(ConstVars.FK_MovieDirectorId);
         }
     }
 }

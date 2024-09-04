@@ -4,7 +4,9 @@ namespace Domain.Constants
     {
         public const string UniqueMovieIndex = "Unique_Movie_Index";
         public const string UniqueDirectorIndex = "Unique_Director_Index";
-        public const string FK_MovieDirectorId = "FK_Movie_Director_DirectorId";
+        public const string FK_MovieDirectorId = "FK_Movie_Director";
+        public const string FK_ActorMovie_Actor = "FK_ActorMovie_Actor";
+        public const string FK_ActorMovie_Movie = "FK_ActorMovie_Movie";
         public const string UniqueActorIndex = "Unique_Actor_Index";
         public const int MovieTitleMaxLength = 80;
         public const int MovieDescMaxLength = 200;
