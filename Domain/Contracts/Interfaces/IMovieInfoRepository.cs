@@ -2,17 +2,19 @@ using Domain.Models.Entities;
 
 namespace Domain.Contracts.Interfaces
 {
-    public interface IMovieInfoRepository
+    public interface IMovieInfoRepository : IRepositoryCommon<Movie>
     {
-        Task<IEnumerable<Movie>> GetMoviesAsync();
-
         // Task<IEnumerable<Movie>> GetMoviesAsync(GetMoviesQueryParamDTO paramDto);
-        Task<Movie?> GetSingleMovieAsync(int Id);
+        Task<Movie?> GetSingleMovieAsync(int Id, bool trackChanges = false);
 
-        Task<Movie?> GetMovieDetailsAsync(int Id);
+        Task<Movie?> GetMovieDetailsAsync(int Id, bool trackChanges = false);
 
-        void DeleteMovie(Movie movie);
+        Task<IEnumerable<Movie>> GetMoviesAsync(bool trackChanges = false);
 
-        void AddMovie(Movie movie);
+        Task<int> DeleteMovie(int Id);
+
+        Task AddMovie(Movie movie);
+
+        Task<bool> Exists(int Id);
     }
 }

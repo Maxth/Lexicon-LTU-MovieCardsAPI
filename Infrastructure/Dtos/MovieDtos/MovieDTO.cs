@@ -1,4 +1,4 @@
-namespace Application.Dtos.MovieDtos
+namespace Infrastructure.Dtos.MovieDtos
 {
 #nullable disable
     public class MovieDTO

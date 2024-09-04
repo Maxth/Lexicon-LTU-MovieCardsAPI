@@ -3,9 +3,12 @@ using Infrastructure.Data;
 using Infrastructure.Repository;
 using Presentation.CustomMiddleware;
 using Presentation.Extensions;
+using Service;
+using Service.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<MovieCardsDbContext>();
 builder
     .Services.AddControllers(options =>
     {
@@ -15,14 +18,11 @@ builder
     })
     .AddNewtonsoftJson();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddDbContext<MovieCardsDbContext>();
-builder.Services.AddScoped<IMovieInfoRepository, MovieInfoRepository>();
-builder.Services.AddScoped<IDirectorInfoRepository, DirectorInfoRepository>();
-builder.Services.AddScoped<IRepository, Repository>();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+builder.Services.AddScoped<IServiceManager, ServiceManager>();
 
 var app = builder.Build();
 

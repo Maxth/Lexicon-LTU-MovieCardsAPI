@@ -1,8 +1,8 @@
-using Application.Dtos.ActorDtos;
-using Application.Dtos.DirectorDtos;
-using Application.Dtos.GenreDtos;
+using Infrastructure.Dtos.ActorDtos;
+using Infrastructure.Dtos.DirectorDtos;
+using Infrastructure.Dtos.GenreDtos;
 
-namespace Application.Dtos.MovieDtos
+namespace Infrastructure.Dtos.MovieDtos
 {
 #nullable disable
     public class MovieDetailsDTO

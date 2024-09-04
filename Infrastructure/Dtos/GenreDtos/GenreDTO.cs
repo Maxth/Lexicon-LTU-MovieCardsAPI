@@ -1,4 +1,4 @@
-namespace Application.Dtos.GenreDtos
+namespace Infrastructure.Dtos.GenreDtos
 {
     public record GenreDTO(int Id, string Name);
 }

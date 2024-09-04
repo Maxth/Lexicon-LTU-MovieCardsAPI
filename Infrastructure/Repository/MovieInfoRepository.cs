@@ -5,54 +5,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository
 {
-    public class MovieInfoRepository : IMovieInfoRepository
+    public class MovieInfoRepository : RepositoryBase<Movie>, IMovieInfoRepository
     {
-        private readonly MovieCardsDbContext _context;
-
         public MovieInfoRepository(MovieCardsDbContext context)
-        {
-            _context = context;
-        }
+            : base(context) { }
 
-        public void AddMovie(Movie movie)
-        {
-            _context.Movie.Add(movie);
-        }
+        public async Task AddMovie(Movie movie) => await CreateAsync(movie);
 
-        public void DeleteMovie(Movie movie)
-        {
-            _context.Movie.Remove(movie);
-        }
+        public async Task<int> DeleteMovie(int Id) =>
+            await GetByCondition(m => m.Id == Id).ExecuteDeleteAsync();
 
-        public async Task<Movie?> GetMovieDetailsAsync(int Id)
-        {
-            return await _context
-                .Movie.Where(m => m.Id == Id)
+        public async Task<bool> Exists(int Id) => await GetByCondition(m => m.Id == Id).AnyAsync();
+
+        public async Task<Movie?> GetMovieDetailsAsync(int Id, bool trackChanges = false) =>
+            await GetByCondition(m => m.Id == Id, trackChanges)
                 .Include(m => m.Genre)
                 .Include(m => m.Actor)
                 .Include(m => m.Director)
                 .ThenInclude(d => d.ContactInformation)
                 .FirstOrDefaultAsync();
-        }
 
-        public async Task<IEnumerable<Movie>> GetMoviesAsync()
-        {
-            return await _context.Movie.ToArrayAsync();
-        }
+        public async Task<IEnumerable<Movie>> GetMoviesAsync(bool trackChanges = false) =>
+            await GetAll(trackChanges).ToListAsync();
 
-        // public async Task<IEnumerable<Movie>> GetMoviesAsync(GetMoviesQueryParamDTO paramDTO)
-        // {
-        //     return await GetMoviesAsync();
-        // }
-
-        public async Task<Movie?> GetSingleMovieAsync(int Id)
-        {
-            return await _context.Movie.FirstOrDefaultAsync(m => m.Id == Id);
-        }
-
-        public Task<bool> MovieWithTitleAndReleaseDateExistsAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<Movie?> GetSingleMovieAsync(int Id, bool trackChanges = false) =>
+            await GetByCondition(m => m.Id == Id, trackChanges).FirstOrDefaultAsync();
     }
 }

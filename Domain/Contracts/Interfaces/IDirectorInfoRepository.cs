@@ -2,14 +2,10 @@ using Domain.Models.Entities;
 
 namespace Domain.Contracts.Interfaces
 {
-    public interface IDirectorInfoRepository
+    public interface IDirectorInfoRepository : IRepositoryCommon<Director>
     {
-        void AddDirector(Director director);
+        Task<IEnumerable<Director>> GetDirectorsAsync(bool trackChanges = false);
 
-        Task<IEnumerable<Director>> GetDirectorsAsync(string orderBy);
-
-        Task<bool> DirectorExistsAsync(int? Id);
-
-        Task<Director?> GetDirectorAsync(int Id);
+        Task<Director?> GetDirectorAsync(int Id, bool trackChanges = false);
     }
 }

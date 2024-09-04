@@ -1,4 +1,4 @@
-namespace Application.Dtos.DirectorDtos
+namespace Infrastructure.Dtos.DirectorDtos
 {
     public record DirectorForMovieDetailsDTO(
         int Id,

@@ -5,38 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository
 {
-    public class DirectorInfoRepository : IDirectorInfoRepository
+    public class DirectorInfoRepository : RepositoryBase<Director>, IDirectorInfoRepository
     {
-        private readonly MovieCardsDbContext _context;
-
         public DirectorInfoRepository(MovieCardsDbContext context)
-        {
-            _context = context;
-        }
+            : base(context) { }
 
-        public void AddDirector(Director director)
-        {
-            _context.Director.Add(director);
-        }
+        public async Task<Director?> GetDirectorAsync(int Id, bool trackChanges = false) =>
+            await GetByCondition(d => d.Id == Id, trackChanges).FirstOrDefaultAsync();
 
-        public async Task<bool> DirectorExistsAsync(int? Id)
-        {
-            return await _context.Director.AnyAsync(d => d.Id == Id);
-        }
-
-        public async Task<Director?> GetDirectorAsync(int Id)
-        {
-            return await _context.Director.FirstOrDefaultAsync(d => d.Id == Id);
-        }
-
-        public async Task<IEnumerable<Director>> GetDirectorsAsync(string orderBy)
-        {
-            if (orderBy.Equals("name", StringComparison.OrdinalIgnoreCase))
-            {
-                return await _context.Director.OrderBy(d => d.Name).ToArrayAsync();
-            }
-
-            return await _context.Director.OrderBy(d => d.DateOfBirth).ToArrayAsync();
-        }
+        public async Task<IEnumerable<Director>> GetDirectorsAsync(bool trackChanges = false) =>
+            await GetAll(trackChanges).ToListAsync();
     }
 }

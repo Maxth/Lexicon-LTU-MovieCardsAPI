@@ -1,9 +1,7 @@
-using Application.Dtos.MovieDtos;
-using AutoMapper;
-using Domain.Contracts.Interfaces;
-using Domain.Models.Entities;
+using Infrastructure.Dtos.MovieDtos;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Service.Contracts;
 
 namespace MovieCardsAPI.Controllers
 {
@@ -11,102 +9,54 @@ namespace MovieCardsAPI.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        private readonly IRepository _repository;
-        private readonly IMovieInfoRepository _movieInfoRepository;
-        private readonly IMapper _mapper;
+        private readonly IServiceManager _service;
 
-        public MoviesController(
-            IRepository repository,
-            IMovieInfoRepository movieInfoRepository,
-            IMapper mapper
-        )
+        public MoviesController(IServiceManager serviceManager)
         {
-            _repository = repository;
-            _movieInfoRepository = movieInfoRepository;
-            _mapper = mapper;
+            _service = serviceManager;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies(
-            [FromQuery] GetMoviesQueryParamDTO paramDTO
+        // [FromQuery] GetMoviesQueryParamDTO paramDTO
         )
         {
-            var movies = await _movieInfoRepository.GetMoviesAsync();
-
-            return Ok(_mapper.Map<IEnumerable<MovieDTO>>(movies));
+            return Ok(await _service.MovieService.GetMoviesAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<MovieDTO>> GetSingleMovie(int Id)
         {
-            var movie = await _movieInfoRepository.GetSingleMovieAsync(Id);
-
-            if (movie is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(_mapper.Map<MovieDTO>(movie));
+            return Ok(await _service.MovieService.GetSingleMovieAsync(Id));
         }
 
         [HttpGet("{id}/details")]
         public async Task<ActionResult<MovieDetailsDTO>> GetMovieDetails(int Id)
         {
-            var movie = await _movieInfoRepository.GetMovieDetailsAsync(Id);
-
-            if (movie is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(_mapper.Map<MovieDetailsDTO>(movie));
+            return Ok(await _service.MovieService.GetMovieDetailsAsync(Id));
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteMovie(int Id)
         {
-            var movieToDelete = await _movieInfoRepository.GetSingleMovieAsync(Id);
-
-            if (movieToDelete is null)
-            {
-                return NotFound();
-            }
-
-            _movieInfoRepository.DeleteMovie(movieToDelete);
-
-            await _repository.SaveChangesAsync();
-
+            await _service.MovieService.DeleteMovie(Id);
             return NoContent();
         }
 
         [HttpPost]
         public async Task<ActionResult> AddMovie(MovieForCreationDTO movieForCreationDto)
         {
-            var movie = _mapper.Map<Movie>(movieForCreationDto);
-            _movieInfoRepository.AddMovie(movie);
+            var outputDto = _service.MovieService.AddMovie(movieForCreationDto);
+            await _service.CompleteAsync();
 
-            await _repository.SaveChangesAsync();
-
-            return CreatedAtAction(
-                "GetSingleMovie",
-                new { id = movie.Id },
-                _mapper.Map<MovieDTO>(movie)
-            );
+            return CreatedAtAction("GetSingleMovie", new { id = outputDto.Id }, outputDto);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateMovie(int Id, MovieForUpdateDTO movieForUpdateDTO)
         {
-            var movie = await _movieInfoRepository.GetSingleMovieAsync(Id);
-
-            if (movie is null)
-            {
-                return NotFound();
-            }
-
-            _mapper.Map(movieForUpdateDTO, movie);
-
-            await _repository.SaveChangesAsync();
+            await _service.MovieService.UpdateMovie(Id, movieForUpdateDTO);
+            await _service.CompleteAsync();
 
             return NoContent();
         }
@@ -117,21 +67,7 @@ namespace MovieCardsAPI.Controllers
             JsonPatchDocument<MovieForPatchDTO> jsonPatchDocument
         )
         {
-            if (jsonPatchDocument is null)
-            {
-                return NotFound("No patch doc");
-            }
-
-            var movie = await _movieInfoRepository.GetSingleMovieAsync(Id);
-
-            if (movie is null)
-            {
-                return NotFound();
-            }
-
-            var movieToPatchDto = _mapper.Map<MovieForPatchDTO>(movie);
-
-            jsonPatchDocument.ApplyTo(movieToPatchDto, ModelState);
+            var patchedMovieDto = _service.MovieService.PatchMovie(Id, jsonPatchDocument);
 
             if (!ModelState.IsValid)
             {
@@ -144,7 +80,7 @@ namespace MovieCardsAPI.Controllers
             }
 
             _mapper.Map(movieToPatchDto, movie);
-            await _repository.SaveChangesAsync();
+            await _rm.CompleteAsync();
 
             return NoContent();
         }

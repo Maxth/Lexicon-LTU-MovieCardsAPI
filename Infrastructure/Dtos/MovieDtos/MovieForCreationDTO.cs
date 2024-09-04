@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Domain.Constants;
 using Domain.Validations;
 
-namespace Application.Dtos.MovieDtos
+namespace Infrastructure.Dtos.MovieDtos
 {
 #nullable disable
     public class MovieForCreationDTO

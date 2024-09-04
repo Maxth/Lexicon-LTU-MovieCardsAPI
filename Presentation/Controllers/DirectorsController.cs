@@ -1,8 +1,7 @@
-using Application.Dtos.DirectorDtos;
-using AutoMapper;
-using Domain.Contracts.Interfaces;
 using Domain.Models.Entities;
+using Infrastructure.Dtos.DirectorDtos;
 using Microsoft.AspNetCore.Mvc;
+using Service.Contracts;
 
 namespace MovieCardsAPI.Controllers
 {
@@ -10,56 +9,34 @@ namespace MovieCardsAPI.Controllers
     [ApiController]
     public class DirectorsController : ControllerBase
     {
-        private readonly IRepository _repository;
-        private readonly IDirectorInfoRepository _directorInfoRepository;
-        private readonly IMapper _mapper;
+        private readonly IServiceManager _service;
 
-        public DirectorsController(
-            IRepository repository,
-            IDirectorInfoRepository directorInfoRepository,
-            IMapper mapper
-        )
+        public DirectorsController(IServiceManager service)
         {
-            _repository = repository;
-            _directorInfoRepository = directorInfoRepository;
-            _mapper = mapper;
+            _service = service;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DirectorDTO>>> GetDirectors(
-            string orderBy = "dateOfBirth"
-        )
+        public async Task<ActionResult<IEnumerable<DirectorDTO>>> GetDirectors()
         {
-            var directors = await _directorInfoRepository.GetDirectorsAsync(orderBy);
-            return Ok(_mapper.Map<IEnumerable<DirectorDTO>>(directors));
+            var directors = await _service.DirectorService.GetDirectorsAsync();
+            return Ok(directors);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<DirectorDTO>> GetSingleDirector(int Id)
         {
-            var director = await _directorInfoRepository.GetDirectorAsync(Id);
-
-            if (director is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(_mapper.Map<DirectorDTO>(director));
+            var director = await _service.DirectorService.GetDirectorAsync(Id);
+            return Ok(director);
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddDirector(DirectorForCreationDTO dto)
+        public async Task<ActionResult> AddDirector(DirectorForCreationDTO inputDto)
         {
-            var director = _mapper.Map<Director>(dto);
-            _directorInfoRepository.AddDirector(director);
+            var outputDto = await _service.DirectorService.AddDirector(inputDto);
+            await _service.CompleteAsync();
 
-            await _repository.SaveChangesAsync();
-
-            return CreatedAtAction(
-                "GetSingleDirector",
-                new { id = director.Id },
-                _mapper.Map<DirectorDTO>(director)
-            );
+            return CreatedAtAction("GetSingleDirector", new { id = outputDto.Id }, outputDto);
         }
     }
 }
