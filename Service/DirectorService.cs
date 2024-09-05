@@ -1,5 +1,6 @@
 using AutoMapper;
 using Domain.Contracts.Interfaces;
+using Domain.Exceptions.NotFound;
 using Domain.Models.Entities;
 using Infrastructure.Dtos.DirectorDtos;
 using Service.Contracts;
@@ -30,8 +31,7 @@ public class DirectorService : IDirectorService
 
         if (director is null)
         {
-            //FIXME
-            throw new NotImplementedException();
+            throw new DirectorNotFoundException(Id);
         }
 
         return _mapper.Map<DirectorDTO>(director);

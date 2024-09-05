@@ -1,9 +1,8 @@
-using Domain.Models.Entities;
 using Infrastructure.Dtos.DirectorDtos;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 
-namespace MovieCardsAPI.Controllers
+namespace Presentation.Controllers
 {
     [Route("api/directors")]
     [ApiController]

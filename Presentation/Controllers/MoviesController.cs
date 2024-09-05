@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 
-namespace MovieCardsAPI.Controllers
+namespace Presentation.Controllers
 {
     [Route("api/movies")]
     [ApiController]
@@ -67,20 +67,21 @@ namespace MovieCardsAPI.Controllers
             JsonPatchDocument<MovieForPatchDTO> jsonPatchDocument
         )
         {
-            var patchedMovieDto = _service.MovieService.PatchMovie(Id, jsonPatchDocument);
+            var patchedMovieDto = await _service.MovieService.PatchMovie(Id, jsonPatchDocument);
+            //FIXME
+            throw new NotImplementedException();
+            // if (!ModelState.IsValid)
+            // {
+            //     return BadRequest(ModelState);
+            // }
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            // if (!TryValidateModel(movieToPatchDto))
+            // {
+            //     return BadRequest(ModelState);
+            // }
 
-            if (!TryValidateModel(movieToPatchDto))
-            {
-                return BadRequest(ModelState);
-            }
-
-            _mapper.Map(movieToPatchDto, movie);
-            await _rm.CompleteAsync();
+            // _mapper.Map(movieToPatchDto, movie);
+            // await _rm.CompleteAsync();
 
             return NoContent();
         }

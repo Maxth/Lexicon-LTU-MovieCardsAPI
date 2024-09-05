@@ -1,5 +1,7 @@
 using AutoMapper;
 using Domain.Contracts.Interfaces;
+using Domain.Exceptions.BadRequest;
+using Domain.Exceptions.NotFound;
 using Domain.Models.Entities;
 using Infrastructure.Dtos.MovieDtos;
 using Microsoft.AspNetCore.JsonPatch;
@@ -29,8 +31,7 @@ public class MovieService : IMovieService
     {
         if (!await _rm.MovieInfoRepository.Exists(Id))
         {
-            //FIXME
-            throw new NotImplementedException();
+            throw new MovieNotFoundException(Id);
         }
 
         var rowsAffected = await _rm.MovieInfoRepository.DeleteMovie(Id);
@@ -48,8 +49,7 @@ public class MovieService : IMovieService
 
         if (movieWithDetails is null)
         {
-            //FIXME
-            throw new NotImplementedException();
+            throw new MovieNotFoundException(Id);
         }
 
         return _mapper.Map<MovieDetailsDTO>(movieWithDetails);
@@ -67,27 +67,27 @@ public class MovieService : IMovieService
 
         if (movie is null)
         {
-            //FIXME
-            throw new NotImplementedException();
+            throw new MovieNotFoundException(Id);
         }
 
         return _mapper.Map<MovieDTO>(movie);
     }
 
-    public async Task<MovieForPatchDTO> PatchMovie(int Id, JsonPatchDocument patchDoc)
+    public async Task<MovieForPatchDTO> PatchMovie(
+        int Id,
+        JsonPatchDocument<MovieForPatchDTO> patchDoc
+    )
     {
         if (patchDoc is null)
         {
-            //FIXME
-            throw new NotImplementedException();
+            throw new NoJsonPatchException();
         }
 
         var movie = await _rm.MovieInfoRepository.GetSingleMovieAsync(Id, trackChanges: true);
 
         if (movie is null)
         {
-            //FIXME
-            throw new NotImplementedException();
+            throw new MovieNotFoundException(Id);
         }
 
         var movieForPatchDto = _mapper.Map<MovieForPatchDTO>(movie);
@@ -106,8 +106,7 @@ public class MovieService : IMovieService
 
         if (movieToUpdate is null)
         {
-            //FIXME
-            throw new NotImplementedException();
+            throw new MovieNotFoundException(Id);
         }
 
         _mapper.Map(inputDto, movieToUpdate);

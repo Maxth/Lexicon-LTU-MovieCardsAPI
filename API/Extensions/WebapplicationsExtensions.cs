@@ -1,6 +1,6 @@
 using Infrastructure.Data;
 
-namespace Presentation.Extensions
+namespace API.Extensions
 {
     public static class WebbapplicationsExtensions
     {
