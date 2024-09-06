@@ -5,7 +5,9 @@ using Domain.Exceptions.NotFound;
 using Domain.Models.Entities;
 using Infrastructure.Dtos.MovieDtos;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Service.Contracts;
+using Service.Validation.Exceptions;
 
 namespace Service;
 
@@ -20,25 +22,25 @@ public class MovieService : IMovieService
         _mapper = mapper;
     }
 
-    public async Task<MovieDTO> AddMovie(MovieForCreationDTO inputDto)
+    public async Task<MovieDTO> AddMovieAsync(MovieForCreationDTO inputDto)
     {
         var movie = _mapper.Map<Movie>(inputDto);
-        await _rm.MovieInfoRepository.AddMovie(movie);
+        await _rm.MovieInfoRepository.AddMovieAsync(movie);
+        await _rm.CompleteAsync();
         return _mapper.Map<MovieDTO>(movie);
     }
 
-    public async Task<int> DeleteMovie(int Id)
+    public async Task<int> DeleteMovieAsync(int Id)
     {
         if (!await _rm.MovieInfoRepository.Exists(Id))
         {
             throw new MovieNotFoundException(Id);
         }
-
-        var rowsAffected = await _rm.MovieInfoRepository.DeleteMovie(Id);
+        var rowsAffected = await _rm.MovieInfoRepository.DeleteMovieAsync(Id);
         if (rowsAffected != 1)
         {
             //FIXME
-            throw new NotImplementedException();
+            throw new NotImplementedException($"Rows deleted {rowsAffected}. Expected: 1");
         }
         return rowsAffected;
     }
@@ -73,9 +75,11 @@ public class MovieService : IMovieService
         return _mapper.Map<MovieDTO>(movie);
     }
 
-    public async Task<MovieForPatchDTO> PatchMovie(
+    public async Task PatchMovieAsync(
         int Id,
-        JsonPatchDocument<MovieForPatchDTO> patchDoc
+        JsonPatchDocument<MovieForPatchDTO> patchDoc,
+        ModelStateDictionary ModelState,
+        Func<object, bool> TryValidateModel
     )
     {
         if (patchDoc is null)
@@ -94,7 +98,13 @@ public class MovieService : IMovieService
 
         patchDoc.ApplyTo(movieForPatchDto);
 
-        return movieForPatchDto;
+        if (!ModelState.IsValid || !TryValidateModel(movieForPatchDto))
+        {
+            throw new InvalidJsonPatchException(ModelState);
+        }
+
+        _mapper.Map(movieForPatchDto, movie);
+        await _rm.CompleteAsync();
     }
 
     public async Task UpdateMovie(int Id, MovieForUpdateDTO inputDto)
@@ -108,7 +118,7 @@ public class MovieService : IMovieService
         {
             throw new MovieNotFoundException(Id);
         }
-
         _mapper.Map(inputDto, movieToUpdate);
+        await _rm.CompleteAsync();
     }
 }

@@ -18,7 +18,7 @@ namespace Presentation.Controllers
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies(
-        // [FromQuery] GetMoviesQueryParamDTO paramDTO
+            [FromQuery] GetMoviesQueryParamDTO? paramDTO
         )
         {
             return Ok(await _service.MovieService.GetMoviesAsync());
@@ -39,16 +39,14 @@ namespace Presentation.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteMovie(int Id)
         {
-            await _service.MovieService.DeleteMovie(Id);
+            await _service.MovieService.DeleteMovieAsync(Id);
             return NoContent();
         }
 
         [HttpPost]
         public async Task<ActionResult> AddMovie(MovieForCreationDTO movieForCreationDto)
         {
-            var outputDto = _service.MovieService.AddMovie(movieForCreationDto);
-            await _service.CompleteAsync();
-
+            var outputDto = await _service.MovieService.AddMovieAsync(movieForCreationDto);
             return CreatedAtAction("GetSingleMovie", new { id = outputDto.Id }, outputDto);
         }
 
@@ -56,8 +54,6 @@ namespace Presentation.Controllers
         public async Task<ActionResult> UpdateMovie(int Id, MovieForUpdateDTO movieForUpdateDTO)
         {
             await _service.MovieService.UpdateMovie(Id, movieForUpdateDTO);
-            await _service.CompleteAsync();
-
             return NoContent();
         }
 
@@ -67,21 +63,12 @@ namespace Presentation.Controllers
             JsonPatchDocument<MovieForPatchDTO> jsonPatchDocument
         )
         {
-            var patchedMovieDto = await _service.MovieService.PatchMovie(Id, jsonPatchDocument);
-            //FIXME
-            throw new NotImplementedException();
-            // if (!ModelState.IsValid)
-            // {
-            //     return BadRequest(ModelState);
-            // }
-
-            // if (!TryValidateModel(movieToPatchDto))
-            // {
-            //     return BadRequest(ModelState);
-            // }
-
-            // _mapper.Map(movieToPatchDto, movie);
-            // await _rm.CompleteAsync();
+            await _service.MovieService.PatchMovieAsync(
+                Id,
+                jsonPatchDocument,
+                ModelState,
+                TryValidateModel
+            );
 
             return NoContent();
         }

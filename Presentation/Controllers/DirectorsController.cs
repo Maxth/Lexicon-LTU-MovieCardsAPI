@@ -33,8 +33,6 @@ namespace Presentation.Controllers
         public async Task<ActionResult> AddDirector(DirectorForCreationDTO inputDto)
         {
             var outputDto = await _service.DirectorService.AddDirector(inputDto);
-            await _service.CompleteAsync();
-
             return CreatedAtAction("GetSingleDirector", new { id = outputDto.Id }, outputDto);
         }
     }

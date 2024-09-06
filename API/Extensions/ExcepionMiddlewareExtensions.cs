@@ -1,10 +1,11 @@
-using System.Net;
 using Domain.Constants;
+using Domain.Exceptions.BadRequest;
 using Domain.Exceptions.NotFound;
 using EntityFramework.Exceptions.Common;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Service.Validation.Exceptions;
 
 namespace API.Extensions
 {
@@ -56,6 +57,22 @@ namespace API.Extensions
                         detail: ex.Message
                     );
 
+                    break;
+                case NoJsonPatchException ex:
+                    statusCode = StatusCodes.Status400BadRequest;
+                    problemDetails = factory.CreateProblemDetails(
+                        httpContext,
+                        statusCode,
+                        title: ex.Title,
+                        detail: ex.Message
+                    );
+                    break;
+                case InvalidJsonPatchException ex:
+                    statusCode = StatusCodes.Status400BadRequest;
+                    problemDetails = factory.CreateValidationProblemDetails(
+                        httpContext,
+                        ex.ModelState
+                    );
                     break;
                 case UniqueConstraintException ex:
                     statusCode = StatusCodes.Status409Conflict;

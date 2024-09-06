@@ -10,9 +10,9 @@ namespace Infrastructure.Repository
         public MovieInfoRepository(MovieCardsDbContext context)
             : base(context) { }
 
-        public async Task AddMovie(Movie movie) => await CreateAsync(movie);
+        public async Task AddMovieAsync(Movie movie) => await CreateAsync(movie);
 
-        public async Task<int> DeleteMovie(int Id) =>
+        public async Task<int> DeleteMovieAsync(int Id) =>
             await GetByCondition(m => m.Id == Id).ExecuteDeleteAsync();
 
         public async Task<bool> Exists(int Id) => await GetByCondition(m => m.Id == Id).AnyAsync();

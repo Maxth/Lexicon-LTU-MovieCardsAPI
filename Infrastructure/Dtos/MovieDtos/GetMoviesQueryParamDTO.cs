@@ -1,6 +1,5 @@
 namespace Infrastructure.Dtos.MovieDtos
 {
-    // [ValidateGetMoviesQueryParams]
     public class GetMoviesQueryParamDTO
     {
         public string? Title { get; set; }

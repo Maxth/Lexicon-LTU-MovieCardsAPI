@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using API.ModelBinding;
 
 namespace API.Extensions
 {
@@ -10,7 +7,11 @@ namespace API.Extensions
         public static void ConfigureControllers(this IServiceCollection services)
         {
             services
-                .AddControllers(options => options.ReturnHttpNotAcceptable = true)
+                .AddControllers(options =>
+                {
+                    options.ModelBinderProviders.Insert(0, new CustomModelBinderProvider());
+                    options.ReturnHttpNotAcceptable = true;
+                })
                 .AddNewtonsoftJson()
                 .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
         }

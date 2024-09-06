@@ -22,6 +22,7 @@ public class DirectorService : IDirectorService
     {
         var director = _mapper.Map<Director>(inputDto);
         await _rm.DirectorInfoRepository.CreateAsync(director);
+        await _rm.CompleteAsync();
         return _mapper.Map<DirectorDTO>(director);
     }
 

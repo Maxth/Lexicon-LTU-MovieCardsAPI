@@ -8,7 +8,6 @@ namespace Service;
 
 public class ServiceManager : IServiceManager
 {
-    private readonly IRepositoryManager _repositoryManager;
     private readonly Lazy<IMovieService> _movieService;
     private readonly Lazy<IDirectorService> _directorService;
     public IMovieService MovieService => _movieService.Value;
@@ -20,8 +19,5 @@ public class ServiceManager : IServiceManager
         _directorService = new Lazy<IDirectorService>(
             () => new DirectorService(repositoryManager, mapper)
         );
-        _repositoryManager = repositoryManager;
     }
-
-    public async Task CompleteAsync() => await _repositoryManager.CompleteAsync();
 }

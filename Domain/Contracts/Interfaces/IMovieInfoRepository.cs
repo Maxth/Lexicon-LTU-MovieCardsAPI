@@ -11,9 +11,9 @@ namespace Domain.Contracts.Interfaces
 
         Task<IEnumerable<Movie>> GetMoviesAsync(bool trackChanges = false);
 
-        Task<int> DeleteMovie(int Id);
+        Task<int> DeleteMovieAsync(int Id);
 
-        Task AddMovie(Movie movie);
+        Task AddMovieAsync(Movie movie);
 
         Task<bool> Exists(int Id);
     }
