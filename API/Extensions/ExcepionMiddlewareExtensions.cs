@@ -34,7 +34,8 @@ namespace API.Extensions
             Exception error
         )
         {
-            ProblemDetails problemDetails;
+            ProblemDetails? problemDetails = null;
+            ValidationProblemDetails? validationProblemDetails = null;
             int statusCode;
             switch (error)
             {
@@ -69,7 +70,7 @@ namespace API.Extensions
                     break;
                 case InvalidJsonPatchException ex:
                     statusCode = StatusCodes.Status400BadRequest;
-                    problemDetails = factory.CreateValidationProblemDetails(
+                    validationProblemDetails = factory.CreateValidationProblemDetails(
                         httpContext,
                         ex.ModelState
                     );
@@ -128,7 +129,15 @@ namespace API.Extensions
             }
 
             httpContext.Response.StatusCode = statusCode;
-            await httpContext.Response.WriteAsJsonAsync(problemDetails);
+            if (problemDetails != null)
+            {
+                await httpContext.Response.WriteAsJsonAsync(problemDetails);
+            }
+            else if (validationProblemDetails != null)
+            {
+                //Using different deserializer than above behind the scenes, i.e WriteAsJsonAsync<ValidationProblemDetails>(...)
+                await httpContext.Response.WriteAsJsonAsync(validationProblemDetails);
+            }
         }
     }
 }

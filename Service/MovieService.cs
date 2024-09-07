@@ -5,6 +5,7 @@ using Domain.Exceptions.NotFound;
 using Domain.Models.Entities;
 using Infrastructure.Dtos.MovieDtos;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Service.Contracts;
 using Service.Validation.Exceptions;
@@ -96,9 +97,9 @@ public class MovieService : IMovieService
 
         var movieForPatchDto = _mapper.Map<MovieForPatchDTO>(movie);
 
-        patchDoc.ApplyTo(movieForPatchDto);
-
-        if (!ModelState.IsValid || !TryValidateModel(movieForPatchDto))
+        patchDoc.ApplyTo(movieForPatchDto, ModelState);
+        TryValidateModel(movieForPatchDto);
+        if (!ModelState.IsValid)
         {
             throw new InvalidJsonPatchException(ModelState);
         }

@@ -16,8 +16,10 @@ namespace Infrastructure.Dtos.MovieDtos
         [MaxLength(ConstVars.MovieDescMaxLength)]
         public string? Description { get; set; }
 
-        public DateOnly ReleaseDate { get; init; }
+        // [Editable(false)]
+        // public DateOnly ReleaseDate { get; set; }
 
-        public int DirectorId { get; init; }
+        // [Editable(false)]
+        // public int DirectorId { get; set; }
     }
 }

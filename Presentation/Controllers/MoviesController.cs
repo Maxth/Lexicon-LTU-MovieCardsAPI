@@ -63,13 +63,13 @@ namespace Presentation.Controllers
             JsonPatchDocument<MovieForPatchDTO> jsonPatchDocument
         )
         {
+            var m = ModelState;
             await _service.MovieService.PatchMovieAsync(
                 Id,
                 jsonPatchDocument,
                 ModelState,
                 TryValidateModel
             );
-
             return NoContent();
         }
     }
