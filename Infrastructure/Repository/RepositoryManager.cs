@@ -11,14 +11,14 @@ namespace Infrastructure.Repository
         public IDirectorInfoRepository DirectorInfoRepository => _directorInfoRepository.Value;
         public IMovieInfoRepository MovieInfoRepository => _movieInfoRepository.Value;
 
-        public RepositoryManager(MovieCardsDbContext context)
+        public RepositoryManager(
+            Lazy<IMovieInfoRepository> movieInfoRepository,
+            Lazy<IDirectorInfoRepository> directorInfoRepository,
+            MovieCardsDbContext context
+        )
         {
-            _directorInfoRepository = new Lazy<IDirectorInfoRepository>(
-                () => new DirectorInfoRepository(context)
-            );
-            _movieInfoRepository = new Lazy<IMovieInfoRepository>(
-                () => new MovieInfoRepository(context)
-            );
+            _directorInfoRepository = directorInfoRepository;
+            _movieInfoRepository = movieInfoRepository;
             _context = context;
         }
 

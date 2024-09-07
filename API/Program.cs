@@ -1,9 +1,5 @@
 using API.Extensions;
-using Domain.Contracts.Interfaces;
 using Infrastructure.Data;
-using Infrastructure.Repository;
-using Service;
-using Service.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +8,8 @@ builder.Services.ConfigureControllers();
 builder.Services.AddAutoMapper(typeof(Infrastructure.AssemblyReference).Assembly);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
-builder.Services.AddScoped<IServiceManager, ServiceManager>();
+builder.Services.ConfigureRepositories();
+builder.Services.ConfigureServices();
 
 var app = builder.Build();
 app.ConfigureExceptionHandler();

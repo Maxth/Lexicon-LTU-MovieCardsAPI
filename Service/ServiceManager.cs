@@ -1,7 +1,3 @@
-using System.IO.Compression;
-using AutoMapper;
-using Domain.Contracts.Interfaces;
-using Infrastructure.Data;
 using Service.Contracts;
 
 namespace Service;
@@ -13,11 +9,9 @@ public class ServiceManager : IServiceManager
     public IMovieService MovieService => _movieService.Value;
     public IDirectorService DirectorService => _directorService.Value;
 
-    public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
+    public ServiceManager(Lazy<IMovieService> movieService, Lazy<IDirectorService> directorService)
     {
-        _movieService = new Lazy<IMovieService>(() => new MovieService(repositoryManager, mapper));
-        _directorService = new Lazy<IDirectorService>(
-            () => new DirectorService(repositoryManager, mapper)
-        );
+        _movieService = movieService;
+        _directorService = directorService;
     }
 }
