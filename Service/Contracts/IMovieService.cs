@@ -1,6 +1,5 @@
-using Infrastructure.Dtos.MovieDtos;
+using Domain.Models.Dtos.MovieDtos;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Service.Contracts;

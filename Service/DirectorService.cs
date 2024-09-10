@@ -1,8 +1,8 @@
 using AutoMapper;
 using Domain.Contracts.Interfaces;
 using Domain.Exceptions.NotFound;
+using Domain.Models.Dtos.DirectorDtos;
 using Domain.Models.Entities;
-using Infrastructure.Dtos.DirectorDtos;
 using Service.Contracts;
 
 namespace Service;

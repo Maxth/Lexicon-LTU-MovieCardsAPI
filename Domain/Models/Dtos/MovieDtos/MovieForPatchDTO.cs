@@ -2,12 +2,12 @@ using System.ComponentModel.DataAnnotations;
 using Domain.Constants;
 using Domain.Validations;
 
-namespace Infrastructure.Dtos.MovieDtos
+namespace Domain.Models.Dtos.MovieDtos
 {
-    public class MovieForUpdateDTO
+    public class MovieForPatchDTO
     {
-        [Required]
         [MaxLength(ConstVars.MovieTitleMaxLength)]
+        [Required]
         public required string Title { get; set; }
 
         [ValidateRatingFormat]
@@ -16,7 +16,10 @@ namespace Infrastructure.Dtos.MovieDtos
         [MaxLength(ConstVars.MovieDescMaxLength)]
         public string? Description { get; set; }
 
-        [Required]
-        public int? DirectorId { get; set; }
+        // [Editable(false)]
+        // public DateOnly ReleaseDate { get; set; }
+
+        // [Editable(false)]
+        // public int DirectorId { get; set; }
     }
 }

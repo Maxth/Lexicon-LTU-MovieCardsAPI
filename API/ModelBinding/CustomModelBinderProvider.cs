@@ -1,4 +1,5 @@
-using Infrastructure.Dtos.MovieDtos;
+using Domain.Models.Dtos.MovieDtos;
+using Domain.Validations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace API.ModelBinding

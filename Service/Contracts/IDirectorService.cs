@@ -1,4 +1,4 @@
-using Infrastructure.Dtos.DirectorDtos;
+using Domain.Models.Dtos.DirectorDtos;
 
 namespace Service.Contracts;
 

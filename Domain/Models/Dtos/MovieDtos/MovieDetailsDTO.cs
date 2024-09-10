@@ -1,8 +1,8 @@
-using Infrastructure.Dtos.ActorDtos;
-using Infrastructure.Dtos.DirectorDtos;
-using Infrastructure.Dtos.GenreDtos;
+using Domain.Models.Dtos.ActorDtos;
+using Domain.Models.Dtos.DirectorDtos;
+using Domain.Models.Dtos.GenreDtos;
 
-namespace Infrastructure.Dtos.MovieDtos
+namespace Domain.Models.Dtos.MovieDtos
 {
 #nullable disable
     public class MovieDetailsDTO

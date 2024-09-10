@@ -1,4 +1,4 @@
-namespace Infrastructure.Dtos.ActorDtos
+namespace Domain.Models.Dtos.ActorDtos
 {
     public record ActorDTO(int Id, string Name);
 }

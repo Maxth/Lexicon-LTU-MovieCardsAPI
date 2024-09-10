@@ -1,6 +1,6 @@
 using AutoMapper;
+using Domain.Models.Dtos.MovieDtos;
 using Domain.Models.Entities;
-using Infrastructure.Dtos.MovieDtos;
 
 namespace Infrastructure.Automapper.Profiles
 {

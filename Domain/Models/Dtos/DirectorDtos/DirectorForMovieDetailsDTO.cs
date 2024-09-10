@@ -1,4 +1,4 @@
-namespace Infrastructure.Dtos.DirectorDtos
+namespace Domain.Models.Dtos.DirectorDtos
 {
     public record DirectorForMovieDetailsDTO(
         int Id,

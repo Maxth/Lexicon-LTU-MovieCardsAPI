@@ -1,4 +1,4 @@
-namespace Infrastructure.Dtos.MovieDtos
+namespace Domain.Models.Dtos.MovieDtos
 {
 #nullable disable
     public class MovieDTO

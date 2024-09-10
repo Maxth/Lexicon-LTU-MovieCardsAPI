@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Infrastructure.Dtos.DirectorDtos
+namespace Domain.Models.Dtos.DirectorDtos
 {
     public class DirectorForCreationDTO
     {

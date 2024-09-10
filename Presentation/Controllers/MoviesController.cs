@@ -1,4 +1,4 @@
-using Infrastructure.Dtos.MovieDtos;
+using Domain.Models.Dtos.MovieDtos;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
@@ -63,7 +63,6 @@ namespace Presentation.Controllers
             JsonPatchDocument<MovieForPatchDTO> jsonPatchDocument
         )
         {
-            var m = ModelState;
             await _service.MovieService.PatchMovieAsync(
                 Id,
                 jsonPatchDocument,

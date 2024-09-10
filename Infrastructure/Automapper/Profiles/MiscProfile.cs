@@ -1,8 +1,8 @@
 using AutoMapper;
+using Domain.Models.Dtos.ActorDtos;
+using Domain.Models.Dtos.DirectorDtos;
+using Domain.Models.Dtos.GenreDtos;
 using Domain.Models.Entities;
-using Infrastructure.Dtos.ActorDtos;
-using Infrastructure.Dtos.DirectorDtos;
-using Infrastructure.Dtos.GenreDtos;
 
 namespace Infrastructure.Automapper.Profiles
 {
