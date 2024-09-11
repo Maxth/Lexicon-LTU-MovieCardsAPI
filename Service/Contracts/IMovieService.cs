@@ -10,7 +10,10 @@ public interface IMovieService
 
     Task<MovieDetailsDTO> GetMovieDetailsAsync(int Id, bool trackChanges = false);
 
-    Task<IEnumerable<MovieDTO>> GetMoviesAsync(bool trackChanges = false);
+    Task<IEnumerable<MovieDTO>> GetMoviesAsync(
+        GetMoviesQueryParamDTO? paramDTO,
+        bool trackChanges = false
+    );
 
     Task<int> DeleteMovieAsync(int Id);
 

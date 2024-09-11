@@ -1,11 +1,13 @@
+using Domain.Models.Dtos.ActorDtos;
+
 namespace Domain.Models.Dtos.MovieDtos
 {
-#nullable disable
     public class MovieDTO
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public DateOnly ReleaseDate { get; set; }
+        public required int Id { get; set; }
+        public required string Title { get; set; }
+        public required DateOnly ReleaseDate { get; set; }
         public double? Rating { get; set; }
+        public IEnumerable<ActorDTO>? Actors { get; set; }
     }
 }

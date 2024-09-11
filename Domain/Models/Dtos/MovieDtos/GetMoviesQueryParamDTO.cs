@@ -1,9 +1,5 @@
-using System.ComponentModel.DataAnnotations;
-using Domain.Validations;
-
 namespace Domain.Models.Dtos.MovieDtos
 {
-    // [ValidateGetMoviesQueryParams]
     public class GetMoviesQueryParamDTO
     {
         public string? Title { get; set; }

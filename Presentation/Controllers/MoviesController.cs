@@ -21,7 +21,7 @@ namespace Presentation.Controllers
             [FromQuery] GetMoviesQueryParamDTO? paramDTO
         )
         {
-            return Ok(await _service.MovieService.GetMoviesAsync());
+            return Ok(await _service.MovieService.GetMoviesAsync(paramDTO));
         }
 
         [HttpGet("{id}")]

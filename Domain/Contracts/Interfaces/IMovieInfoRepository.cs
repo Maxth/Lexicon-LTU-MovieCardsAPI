@@ -1,3 +1,4 @@
+using Domain.Models.Dtos.MovieDtos;
 using Domain.Models.Entities;
 
 namespace Domain.Contracts.Interfaces
@@ -9,7 +10,10 @@ namespace Domain.Contracts.Interfaces
 
         Task<Movie?> GetMovieDetailsAsync(int Id, bool trackChanges = false);
 
-        Task<IEnumerable<Movie>> GetMoviesAsync(bool trackChanges = false);
+        Task<IEnumerable<Movie>> GetMoviesAsync(
+            GetMoviesQueryParamDTO? paramDTO,
+            bool trackChanges = false
+        );
 
         Task<int> DeleteMovieAsync(int Id);
 

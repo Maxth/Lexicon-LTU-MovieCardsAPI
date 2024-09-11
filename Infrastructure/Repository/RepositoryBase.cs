@@ -11,10 +11,10 @@ namespace Infrastructure.Repository
         // protected DbContext Context { get; }
         protected DbSet<T> DbSet { get; }
 
-        public RepositoryBase(MovieCardsDbContext db)
+        public RepositoryBase(MovieCardsDbContext context)
         {
-            // Context = db;
-            DbSet = db.Set<T>();
+            // Context = context;
+            DbSet = context.Set<T>();
         }
 
         public async Task CreateAsync(T entity) => await DbSet.AddAsync(entity);

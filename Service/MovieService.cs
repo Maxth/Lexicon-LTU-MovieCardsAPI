@@ -58,9 +58,12 @@ public class MovieService : IMovieService
         return _mapper.Map<MovieDetailsDTO>(movieWithDetails);
     }
 
-    public async Task<IEnumerable<MovieDTO>> GetMoviesAsync(bool trackChanges = false)
+    public async Task<IEnumerable<MovieDTO>> GetMoviesAsync(
+        GetMoviesQueryParamDTO? paramDTO,
+        bool trackChanges = false
+    )
     {
-        var movies = await _rm.MovieInfoRepository.GetMoviesAsync(trackChanges);
+        var movies = await _rm.MovieInfoRepository.GetMoviesAsync(paramDTO, trackChanges);
         return _mapper.Map<IEnumerable<MovieDTO>>(movies);
     }
 

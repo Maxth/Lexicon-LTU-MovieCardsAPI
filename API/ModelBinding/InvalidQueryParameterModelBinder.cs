@@ -21,7 +21,6 @@ namespace API.ModelBinding
             var queryParamKeys = queryParams.Keys;
 
             // Get the properties of the model
-
             var modelProperties = bindingContext
                 .ModelType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Select(p => p.Name);
@@ -73,11 +72,8 @@ namespace API.ModelBinding
                     "Query parameter validation error",
                     validationResult?.ErrorMessage ?? string.Empty
                 );
+                await defaultBinder.BindModelAsync(bindingContext);
             }
-
-            await defaultBinder.BindModelAsync(bindingContext);
-
-            // Use the default binder for actual model binding
         }
     }
 }

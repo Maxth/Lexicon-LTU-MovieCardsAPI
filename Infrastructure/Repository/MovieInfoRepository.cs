@@ -1,4 +1,5 @@
 using Domain.Contracts.Interfaces;
+using Domain.Models.Dtos.MovieDtos;
 using Domain.Models.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -25,8 +26,26 @@ namespace Infrastructure.Repository
                 .ThenInclude(d => d.ContactInformation)
                 .FirstOrDefaultAsync();
 
-        public async Task<IEnumerable<Movie>> GetMoviesAsync(bool trackChanges = false) =>
-            await GetAll(trackChanges).ToListAsync();
+        public async Task<IEnumerable<Movie>> GetMoviesAsync(
+            GetMoviesQueryParamDTO? paramDTO,
+            bool trackChanges = false
+        )
+        {
+            if (paramDTO is null)
+            {
+                return await GetAll(trackChanges).ToListAsync();
+            }
+
+            IQueryable<Movie> query;
+            //SEARCHING AND FILTERING
+            if (paramDTO.IncludeActors == true)
+            {
+                query = DbSet.Include(m => m.Actor);
+                return await query.ToListAsync();
+            }
+
+            return [];
+        }
 
         public async Task<Movie?> GetSingleMovieAsync(int Id, bool trackChanges = false) =>
             await GetByCondition(m => m.Id == Id, trackChanges).FirstOrDefaultAsync();
