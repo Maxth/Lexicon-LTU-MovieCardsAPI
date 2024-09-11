@@ -10,7 +10,6 @@ namespace API.ModelBinding
         {
             ArgumentNullException.ThrowIfNull(context);
 
-            // Apply this binder to your specific models (or to all models if you want)
             if (context.Metadata.ModelType == typeof(GetMoviesQueryParamDTO))
             {
                 return new InvalidQueryParameterModelBinder();

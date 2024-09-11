@@ -36,13 +36,15 @@ public class ValidateGetMoviesQueryParams : ValidationAttribute
                 );
             }
 
-            if (paramDTO?.ReleaseDateTo != null && paramDTO.ReleaseDateFrom != null)
+            if (
+                paramDTO?.ReleaseDateTo != null
+                && paramDTO.ReleaseDateFrom != null
+                && paramDTO.ReleaseDateFrom > paramDTO.ReleaseDateTo
+            )
             {
-                return paramDTO.ReleaseDateFrom <= paramDTO.ReleaseDateTo
-                    ? ValidationResult.Success
-                    : new ValidationResult(
-                        "The query param fromDate need to be less than or equal to the query param toDate"
-                    );
+                return new ValidationResult(
+                    "The query param fromDate need to be less than or equal to the query param toDate"
+                );
             }
         }
 

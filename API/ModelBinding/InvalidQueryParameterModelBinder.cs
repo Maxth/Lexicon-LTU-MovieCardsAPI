@@ -48,22 +48,8 @@ namespace API.ModelBinding
             //Now we do additional checks using custom validation attribute.
             var validationAttribute = new ValidateGetMoviesQueryParams();
             var validationContext = new ValidationContext(bindingContext.Model ?? string.Empty);
-            var obj = new GetMoviesQueryParamDTO()
-            {
-                Title = queryParams["title"],
-                ActorName = queryParams["actorName"],
-                DirectorName = queryParams["directorName"],
-                Genre = queryParams["genre"],
-                IncludeActors = bool.TryParse(queryParams["includeActors"], out bool b) && b,
-                ReleaseDateFrom = DateOnly.TryParse(queryParams["releaseDateFrom"], out DateOnly d)
-                    ? d
-                    : null,
-                ReleaseDateTo = DateOnly.TryParse(queryParams["releaseDateTo"], out DateOnly d2)
-                    ? d2
-                    : null,
-                SortBy = [.. queryParams["sortBy"]],
-                SortOrder = queryParams["sortOrder"]
-            };
+            GetMoviesQueryParamDTO? obj = QueryToDto(queryParams);
+
             var validationResult = validationAttribute.GetValidationResult(obj, validationContext);
 
             if (validationResult != ValidationResult.Success)
@@ -73,7 +59,60 @@ namespace API.ModelBinding
                     validationResult?.ErrorMessage ?? string.Empty
                 );
                 await defaultBinder.BindModelAsync(bindingContext);
+                return;
             }
+            bindingContext.Result = ModelBindingResult.Success(obj);
+            await defaultBinder.BindModelAsync(bindingContext);
+        }
+
+        private static GetMoviesQueryParamDTO? QueryToDto(IQueryCollection queryParams)
+        {
+            var obj = new GetMoviesQueryParamDTO()
+            {
+                Title = queryParams["title"],
+                ActorName = queryParams["actorName"],
+                DirectorName = queryParams["directorName"],
+                Genre = queryParams["genre"],
+                IncludeActors = bool.TryParse(queryParams["includeActors"], out bool b) ? b : null,
+                ReleaseDateFrom = DateOnly.TryParse(queryParams["releaseDateFrom"], out DateOnly d)
+                    ? d
+                    : null,
+                ReleaseDateTo = DateOnly.TryParse(queryParams["releaseDateTo"], out DateOnly d2)
+                    ? d2
+                    : null,
+                SortBy = [.. queryParams["sortBy"]],
+                SortOrder = queryParams["sortOrder"]
+            };
+
+            return IsObjEmpty(obj) ? null : obj;
+        }
+
+        private static bool IsObjEmpty(GetMoviesQueryParamDTO obj)
+        {
+            foreach (PropertyInfo pi in obj.GetType().GetProperties())
+            {
+                System.Console.WriteLine(pi.PropertyType);
+                if (
+                    (
+                        pi.PropertyType == typeof(string)
+                        || pi.PropertyType == typeof(DateOnly?)
+                        || pi.PropertyType == typeof(bool?)
+                    )
+                    && pi.GetValue(obj) != null
+                )
+                {
+                    return false;
+                }
+                if (pi.PropertyType == typeof(List<string>))
+                {
+                    var value = (List<string>)pi.GetValue(obj)!;
+                    if (value.Count > 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }
