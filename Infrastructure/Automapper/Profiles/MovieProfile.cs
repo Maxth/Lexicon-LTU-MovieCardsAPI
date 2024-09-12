@@ -10,6 +10,7 @@ namespace Infrastructure.Automapper.Profiles
         {
             CreateMap<Movie, MovieDTO>()
                 .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actor))
+                .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genre))
                 .ReverseMap();
 
             CreateMap<Movie, MovieDetailsDTO>()

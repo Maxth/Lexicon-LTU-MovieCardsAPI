@@ -9,7 +9,9 @@ namespace Domain.Models.Dtos.MovieDtos
         public string? ActorName { get; set; }
         public string? DirectorName { get; set; }
         public List<string>? SortBy { get; set; }
-        public string? SortOrder { get; set; }
         public bool? IncludeActors { get; set; }
+
+        public bool? IncludeDirector { get; set; }
+        public bool? IncludeGenres { get; set; }
     }
 }

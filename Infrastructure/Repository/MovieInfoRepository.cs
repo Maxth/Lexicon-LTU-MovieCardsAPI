@@ -1,7 +1,9 @@
+using System.Linq.Expressions;
 using Domain.Contracts.Interfaces;
 using Domain.Models.Dtos.MovieDtos;
 using Domain.Models.Entities;
 using Infrastructure.Data;
+using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository
@@ -31,20 +33,69 @@ namespace Infrastructure.Repository
             bool trackChanges = false
         )
         {
-            if (paramDTO is null)
+            var query = GetAll(trackChanges);
+
+            //INCLUDING RELATED ENTITIES DEPENDING ON QUERY PARAMS
+            if (paramDTO?.IncludeActors == true || paramDTO?.ActorName != null)
             {
-                return await GetAll(trackChanges).ToListAsync();
+                query = query.Include(m => m.Actor);
+            }
+            if (paramDTO?.IncludeDirector == true || paramDTO?.DirectorName != null)
+            {
+                query = query.Include(m => m.Director);
+            }
+            if (paramDTO?.IncludeGenres == true || paramDTO?.Genre != null)
+            {
+                query = query.Include(m => m.Genre);
+            }
+            //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+            //SEARCHING ---------------SEARCHING------------------SEARCHING
+            if (paramDTO?.Title != null)
+            {
+                query = query.Where(m => m.Title.Contains(paramDTO.Title));
             }
 
-            IQueryable<Movie> query;
-            //SEARCHING AND FILTERING
-            if (paramDTO.IncludeActors == true)
+            if (paramDTO?.DirectorName != null)
             {
-                query = DbSet.Include(m => m.Actor);
-                return await query.ToListAsync();
+                query = query.Where(m => m.Director.Name.Contains(paramDTO.DirectorName));
             }
 
-            return [];
+            if (paramDTO?.ActorName != null)
+            {
+                query = query.Where(m =>
+                    m.Actor.Select(a => a.Name).Any(n => n.Contains(paramDTO.ActorName))
+                );
+            }
+
+            if (paramDTO?.Genre != null)
+            {
+                query = query.Where(m =>
+                    m.Genre.Select(a => a.Name).Any(n => n.Contains(paramDTO.Genre))
+                );
+            }
+            //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+            //FILTERING-------------FILTERING---------------------FILTERING
+
+            if (paramDTO?.ReleaseDateFrom != null)
+            {
+                query = query.Where(m => m.ReleaseDate >= paramDTO.ReleaseDateFrom);
+            }
+
+            if (paramDTO?.ReleaseDateTo != null)
+            {
+                query = query.Where(m => m.ReleaseDate <= paramDTO.ReleaseDateTo);
+            }
+            //<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+            //SORTING-----------SORTING--------------------------SORTING
+            query = query.CustomOrderBy(paramDTO?.SortBy ?? []);
+            //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+            return await query.ToListAsync();
         }
 
         public async Task<Movie?> GetSingleMovieAsync(int Id, bool trackChanges = false) =>

@@ -6,33 +6,34 @@ namespace Domain.Validations;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 public class ValidateGetMoviesQueryParams : ValidationAttribute
 {
-    private static readonly string[] validSortByValues = new[] { "rating", "releasedate", "title" };
+    private static readonly string[] validSortByValues = new[]
+    {
+        "rating",
+        "rating_desc",
+        "releasedate",
+        "releasedate_desc",
+        "title",
+        "title_desc"
+    };
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         if (value is GetMoviesQueryParamDTO paramDTO)
         {
-            if (paramDTO?.SortBy?.Count == 0 && paramDTO.SortOrder != null)
-            {
-                return new ValidationResult(
-                    "The query param sortOrder cannot be used without using a valid value of query param sortBy"
-                );
-            }
-
             if (paramDTO?.SortBy?.Any(p => !validSortByValues.Contains(p.ToLower())) ?? false)
             {
                 return new ValidationResult(
-                    "The query param sortBy must be either rating, releaseDate or title"
+                    $"The query param sortBy must be either {string.Join(", ", validSortByValues)}"
                 );
             }
             if (
-                paramDTO?.SortOrder != null
-                && !paramDTO.SortOrder.Equals("ascending", StringComparison.OrdinalIgnoreCase)
-                && !paramDTO.SortOrder.Equals("descending", StringComparison.OrdinalIgnoreCase)
+                paramDTO?.SortBy?.Where(s => s.Contains("rating")).Count() > 1
+                || paramDTO?.SortBy?.Where(s => s.Contains("releasedate")).Count() > 1
+                || paramDTO?.SortBy?.Where(s => s.Contains("title")).Count() > 1
             )
             {
                 return new ValidationResult(
-                    "The query param sortOrder must be either ascending or descending"
+                    "Invalid use of sortBy parameter. Must not use both the ascending and the descending variant of the same property."
                 );
             }
 

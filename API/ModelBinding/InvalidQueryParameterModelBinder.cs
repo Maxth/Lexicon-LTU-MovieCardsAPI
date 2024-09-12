@@ -74,6 +74,12 @@ namespace API.ModelBinding
                 DirectorName = queryParams["directorName"],
                 Genre = queryParams["genre"],
                 IncludeActors = bool.TryParse(queryParams["includeActors"], out bool b) ? b : null,
+                IncludeDirector = bool.TryParse(queryParams["includeDirector"], out bool b2)
+                    ? b2
+                    : null,
+                IncludeGenres = bool.TryParse(queryParams["includeGenres"], out bool b3)
+                    ? b3
+                    : null,
                 ReleaseDateFrom = DateOnly.TryParse(queryParams["releaseDateFrom"], out DateOnly d)
                     ? d
                     : null,
@@ -81,17 +87,15 @@ namespace API.ModelBinding
                     ? d2
                     : null,
                 SortBy = [.. queryParams["sortBy"]],
-                SortOrder = queryParams["sortOrder"]
             };
 
-            return IsObjEmpty(obj) ? null : obj;
+            return obj;
         }
 
         private static bool IsObjEmpty(GetMoviesQueryParamDTO obj)
         {
             foreach (PropertyInfo pi in obj.GetType().GetProperties())
             {
-                System.Console.WriteLine(pi.PropertyType);
                 if (
                     (
                         pi.PropertyType == typeof(string)
